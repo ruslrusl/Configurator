@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="common/header :: common-header"></div>
+    <script th:src="@{/js/configurator.js}"></script>
+    <title th:text="#{title.conf}"></title>
+</head>
+<body>
+<div th:replace="common/navigation::common-nav"/>
+
+<div class="container-fluid">
+
+    <h5 th:text="${sensor.getRusname()}"/>
+
+
+    <div class="">
+        <span th:if="${sensorStatus!=null} ">
+            <span style="display: inline-block; vertical-align: top;" th:switch="${sensorStatus.getStatus()}">
+                <img th:case="1" th:src="@{/css/images/applicable3_OK.gif}"></img>
+                <img th:case="2" th:src="@{/css/images/applicable3_BE.gif}"></img>
+                <img th:case="3" th:src="@{/css/images/applicable3_NO.gif}"></img>
+            </span>
+            <table style="display: inline-block;" class="h6" th:utext="${sensorStatus.getMessage()}">
+            </table>
+        </span>
+        <span th:unless="${sensorStatus!=null}">
+            <img th:src="@{/css/images/applicable3_BE.gif}"></img>
+            <span style="display:inline-block" class="h6">
+                  Укажите, пожалуйста, свойства продукта
+            </span>
+        </span>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <!-- Первая вкладка (активная) -->
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#main" id="limain" th:text="#{conf.navbar.main}"></a>
+        </li>
+        <!-- Вторая вкладка -->
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#option" id="lioption" th:text="#{conf.navbar.option}"></a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="main">
+            <div id="MLFBdiv">
+                <form id="mlfbForm" action="" method="post">
+                    <table class="table table-striped">
+                        <tr th:each="item: ${sensorsLabels}">
+                            <td th:if="${item.getTab()==1}">
+                        <span th:switch="${item.getSelectType()}" class="float-left mr-sm-2">
+                          <img th:case="1" th:src="@{/css/images/check_green.gif}"></img>
+                          <img th:case="2" th:src="@{/css/images/question_orange.gif}"></img>
+                          <img th:case="3" th:src="@{/css/images/fail_red.gif}"></img>
+                        </span>
+
+                                <span th:id="'spanGroup'+${item.getPosition()}" th:text="${item.getName()}"
+                                      class="h5 cursorpointer"
+                                      th:style="${item.getSelectType()==3}?'color:red':''"
+                                      th:data-parameter1="${item.getPosition()}"
+                                      th:onclick="jumpNextGroup(0,this.getAttribute('data-parameter1'), 0, this)">
+                                </span>
+
+                                <div th:style="${(item.getSelectType()!=2 && item.getCurrentOptionSelect() !=null)? 'display:block' : 'display:none'}">
+                                                                <span style="display:inline-block" class="ml-5 h6"
+                                                                      th:text="${item.getCurrentOptionSelect() !=null} ? ${item.getCurrentOptionSelect().getOption()} + '-'+${item.getCurrentOptionSelect().getName()} : ''">
+                                                                </span>
+                                    <img style="display:inline-block" class="cursorpointer"
+                                         th:src="@{/css/images/icons8-delete-8.png}"
+                                         th:data-parameter1="${item.getCurrentOptionSelect() !=null} ? ${item.getCurrentOptionSelect().getOption()} : ''"
+                                         th:data-parameter2="${item.getPosition()}"
+                                         th:onclick="removeGroupOption(this.getAttribute('data-parameter2'), this.getAttribute('data-parameter1'))"
+                                    ></img>
+                                </div>
+                                <div th:id="'div'+${item.getId()}"
+                                     th:style="${item.isActive() ? 'display:block' : 'display:none'}">
+                                    <ul>
+                                        <li th:each="option: ${item.getSensorsOptionNames()}"
+                                            th:class="${option.isPossible()}? 'enabledinput':'disabledinput' ">
+                                            <input type="radio" th:id="'radio'+${option.getId()}"
+                                                   th:name="'radio'+${option.getOption()}"
+                                                   th:checked="${option.isSelected()}"
+                                                   th:disabled="${option.isPossible()}?false:true"
+                                                   th:data-parameter1="${option.getOption()}"
+                                                   th:data-parameter2="${item.getPosition()}"
+                                                   th:onclick="jumpNextGroup(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'), 1, this)"
+                                            />
+                                            <label th:for="'radio'+${option.getId()}"
+                                                   th:text="${option.getOption()}+ '-' + ${option.getName()} "
+                                                   th:class="${option.isPossible()}? 'cursorpointer':'' "></label>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="option">
+            <div id="MLFBdivoption">
+                <table class="table table-striped">
+                    <tr th:each="item: ${sensorsLabels}">
+                        <td th:if="${item.getTab()==2}">
+                        <span th:switch="${item.getSelectType()}" class="float-left mr-sm-2">
+                          <img th:case="1" th:src="@{/css/images/check_green.gif}"></img>
+                          <img th:case="2" th:src="@{/css/images/question_orange.gif}"></img>
+                          <img th:case="3" th:src="@{/css/images/fail_red.gif}"></img>
+                        </span>
+
+                            <span th:id="'spanGroup'+${item.getPosition()}" th:text="${item.getName()}"
+                                  class="h5 cursorpointer"
+                                  th:style="${item.getSelectType()==3}?'color:red':''"
+                                  th:data-parameter1="${item.getPosition()}"
+                                  th:onclick="jumpNextGroup(0,this.getAttribute('data-parameter1'), 0, this);">
+                                </span>
+
+                            <div th:style="${(item.getSelectType()!=2 && item.getCurrentOptionSelect() !=null)  ? 'display:block' : 'display:none'}">
+                                <span style="display:inline-block" class="ml-5 h6"
+                                      th:text="${item.getCurrentOptionSelect() !=null} ? ${item.getCurrentOptionSelect().getOption()} + '-'+${item.getCurrentOptionSelect().getName()} : ''">
+                                </span>
+                                <img style="display:inline-block" class="cursorpointer"
+                                     th:src="@{/css/images/icons8-delete-8.png}"
+                                     th:data-parameter1="${item.getCurrentOptionSelect() !=null} ? ${item.getCurrentOptionSelect().getOption()} : ''"
+                                     th:data-parameter2="${item.getPosition()}"
+                                     th:onclick="removeGroupOption(this.getAttribute('data-parameter2'), this.getAttribute('data-parameter1'))"
+                                ></img>
+                            </div>
+                            <div th:id="${item.getId()}"
+                                 th:style="${item.isActive() ? 'display:block' : 'display:none'}">
+                                <ul>
+                                    <li th:each="option: ${item.getSensorsOptionNames()}"
+                                        th:class="${option.isPossible()}? 'enabledinput':'disabledinput'">
+                                        <input th:type="${item.getEltype()==1}?'radio':'checkbox'"
+                                               th:id="${item.getEltype()==1}?'radio'+${option.getId()}:'checkbox'+${option.getId()}"
+                                               th:name="${item.getEltype()==1}?'radio'+${option.getOption()}:'radio'+${option.getOption()}"
+                                               th:checked="${option.isSelected()}"
+                                               th:disabled="${option.isPossible()}?false:true"
+                                               th:data-parameter1="${option.getOption()}"
+                                               th:data-parameter2="${item.getPosition()}"
+                                               th:onclick="jumpNextGroup(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'), 1, this);"
+                                        />
+                                        <label th:for="'radio'+${option.getId()}"
+                                               th:text="${option.getOption()}+ '-' + ${option.getName()} "
+                                               th:class="${option.isPossible()}? 'cursorpointer':'' "></label>
+                                        <div th:switch="${option.getOption()}">
+                                            <input th:case="Y15" id="Y15input" type="text" th:maxlength="${sensor.getId()>21}?32:16"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                            <input th:case="Y16" id="Y16input" type="text" th:maxlength="${sensor.getId()>21}?32:27"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                            <input th:case="Y17" id="Y17input" type="text" th:maxlength="${sensor.getId()>21}?32:16"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                            <input th:case="Y25" id="Y25input" type="text" maxlength="${sensor.getId()>21}?3:16"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+
+                                            <input th:case="Y99" id="Y99input" type="text" maxlength="100"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                            <input th:case="Y32" id="Y32input" type="text" maxlength="10"
+                                                   th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+
+                                            <div th:case="Y30">
+                                                <input th:if="${sensor.getId()<=21}" id="Y30input" type="text" maxlength="16"
+                                                       th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+
+                                                <select th:unless="${sensor.getId()<=21}" id="Y30select">
+                                                    <option th:each="unit, iState : ${Y30units}"
+                                                            th:value="'Y30option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null && option.getOptionParam().getParam1().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+
+
+
+                                            <div th:case="Y01">
+                                                <input type="number" id="Y01number1"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                                ...
+                                                <input type="number" id="Y01number2"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam2()} : ''"/>
+                                                <select id="Y01select">
+                                                    <option th:each="unit, iState : ${Y01units}"
+                                                            th:value="'Y01option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam3()!=null && option.getOptionParam().getParam3().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div th:case="Y21">
+                                                <select id="Y21select">
+                                                    <option th:each="unit, iState : ${Y21units}"
+                                                            th:value="'Y21option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null && option.getOptionParam().getParam1().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div th:case="Y02">
+                                                <input th:if="${sensor.getId()<=21}" type="number" id="Y02number1"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                                <span th:if="${sensor.getId()<=21}">...</span>
+
+                                                <input th:if="${sensor.getId()<=21}" type="number" id="Y02number2"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam2()} : ''"/>
+                                                <select id="Y02select">
+                                                    <option th:each="unit, iState : ${Y02units}"
+                                                            th:value="'Y02option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam3()!=null && option.getOptionParam().getParam3().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div th:case="Y22">
+                                                <input type="number" id="Y22number1" maxlength="8"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                                ...
+                                                <input type="number" id="Y22number2" maxlength="8"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam2()} : ''"/>
+                                                <input th:if="${sensor.getId()<=21}" id="Y22input" type="text" maxlength="16"
+                                                       th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam3()!=null} ? ${option.getOptionParam().getParam3()} : ''"/>
+
+                                                <select th:unless="${sensor.getId()<=21}" id="Y22select">
+                                                    <option th:each="unit, iState : ${Y22units}"
+                                                            th:value="'Y22option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam3()!=null && option.getOptionParam().getParam3().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                            <div th:case="Y23">
+                                                <input type="number" id="Y23number1" maxlength="8"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam1()} : ''"/>
+                                                ...
+                                                <input type="number" id="Y23number2" maxlength="8"
+                                                       th:value="${option.getOptionParam()!=null} ? ${option.getOptionParam().getParam2()} : ''"/>
+                                                <input type="text" id="Y23input" maxlength="16"
+                                                       th:value="${option.getOptionParam()!=null && option.getOptionParam().getParam3()!=null} ? ${option.getOptionParam().getParam3()} : ''"/>
+
+                                            </div>
+                                            <div th:case="Y26">
+                                                <select id="Y26select">
+                                                    <option th:each="unit, iState : ${Y26units}"
+                                                            th:value="'Y26option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null && option.getOptionParam().getParam1().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div th:case="Y31">
+                                                <select id="Y31select">
+                                                    <option th:each="unit, iState : ${Y31units}"
+                                                            th:value="'Y31option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null && option.getOptionParam().getParam1().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div th:case="Y38">
+                                                <select id="Y38select">
+                                                    <option th:each="unit, iState : ${Y38units}"
+                                                            th:value="'Y38option'+${iState.index}" th:text="${unit}"
+                                                            th:selected="(${option.getOptionParam()!=null && option.getOptionParam().getParam1()!=null && option.getOptionParam().getParam1().equalsIgnoreCase(unit)})">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <br/>
+
+
+    <div>
+        <span class="mr-5 font-weight-bold">Номер заказа (MLFB)</span>
+        <span th:each="item, iState: ${mlfbRus}">
+            <span th:if="${iState.index < (sensor.getId()<=21?11:9)}" th:id="'lconstant' + (${iState.index + 1})" th:text="${item}"></span>
+            <span th:unless="${iState.index < (sensor.getId()<=21?11:9)}">
+                <a th:id="'lmmm' + (${iState.index - 3})" onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">
+                <span th:text="${item}" class="cursorpointer">.</span>
+                </a>
+            </span>
+        </span>
+
+        <span th:each="item, iState: ${mlfb}" style="display: none;">
+            <span th:if="${iState.index < (sensor.getId()<=21?7:5)}" th:id="'lm' + (${iState.index + 1})" th:text="${item}"></span>
+            <span th:unless="${iState.index < (sensor.getId()<=21?7:5)}">
+                <a th:id="'lm' + (${iState.index + 1})" onclick="jumpNextGroup(0,this.id.substring(2), 0, this);">
+                <span th:text="${item}" class="cursorpointer">.</span>
+                </a>
+            </span>
+        </span>
+        <br/>
+        <span class="mr-5 font-weight-bold">B-строка</span>
+        <span th:each="item, iState: ${mlfbB}">
+            <span>
+                <a th:id="'lb' + (${iState.index + 1})">
+                <span th:text="${item}"></span>
+                </a>
+            </span>
+            <span th:if="${iState.index + 1} != ${iState.size}">+</span>
+        </span>
+        <br/>
+        <span class="mr-5 font-weight-bold">C-строка</span>
+        <!--        <span id="mlfbC" th:text="${mlfbC}"></span>-->
+        <span th:each="item, iState: ${mlfbC}">
+            <span>
+                <a th:id="'lc' + (${iState.index + 1})">
+                <span th:text="${item}"></span>
+                </a>
+            </span>
+            <span th:if="${iState.index + 1} != ${iState.size}"> </span>
+        </span>
+
+    </div>
+
+</div>
+</body>
+</html>

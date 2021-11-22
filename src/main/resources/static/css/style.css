@@ -1,0 +1,17 @@
+.disabledinput {
+    opacity: 0.8;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
+    background-color: #f7dede;
+}
+.enabledinput {
+    opacity: 1;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
+input[type='number']{
+    width: 100px;
+}
+
+.cursorpointer {
+    cursor: pointer;
+}

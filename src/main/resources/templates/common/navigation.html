@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="common-nav">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/configurator"><span th:text="#{app.name}">Main</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/configurator"><span th:text="#{navbar.conf}">Configurator</span>
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=""><span th:text="#{navbar.basket}">Basket</span></a>
+                </li>
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <input id="searchSensor" class="form-control mr-sm-2"
+                       style="-webkit-appearance: none; margin: 0; -moz-appearance: textfield;" type="number"
+                       th:placeholder="#{navbar.search.sensor}">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit" onclick="searchAnimal()"><span
+                        th:text="#{navbar.search}">Search</span></button>
+                <p class="text-center ml-3 m-0" style="color: rgba(255,255,255,.5);">
+                    <span id="loginName">Администратор</span></br>
+                </p>
+                <button class="btn btn-secondary my-2 my-sm-0 ml-3" type="submit" onclick="location.href='/logout'"><img
+                        src="/css/images/icon_logout.svg" height="24" width="24"/></button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="loadingDiv">
+        <div class="loader">Загрузка...</div>
+    </div>
+
+
+</div>
+</body>
+</html>
