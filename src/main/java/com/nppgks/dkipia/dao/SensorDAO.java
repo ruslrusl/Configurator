@@ -1,21 +1,83 @@
 package com.nppgks.dkipia.dao;
 
-import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.SensorStatus;
+import com.nppgks.dkipia.entity.Sensors;
+import com.nppgks.dkipia.entity.SensorsLabels;
+import com.nppgks.dkipia.entity.SensorsOptionNames;
 
 import java.util.List;
 
 public interface SensorDAO {
-    public List<SensorTypeEntity> getSensorTypes();
-    public List<SelectionEntity> getSelections(int idSensor);
-    public List<SelectOptionEntity> getSelectionOptions(int idSensor, String mlfb);
+    /**
+     * Получение датчиков
+     *
+     * @return список
+     */
+    List<Sensors> getSensors();
 
-    public List<Sensors> getSensors();
-    public Sensors getSensorById(int idSensor);
-    public List<SensorsLabels> getSensorLabels(int idSensor);
-    public List<SensorsOptionNames> getSensorOptions(int idSensorLabels);
-    public List<SensorsOptionNames> getSensorOptionsByRule(String mlfb, int idSensorLabels);
-    public List<SensorsOptionNames> getSensorOptionsByMlfb(String mlfb);
-    public List<SensorsOptionNames> getSensorOptionsByMlfbB(int idSensor, String mlfbB);
-    public List<SensorStatus> getSensorStatus(String mlfb);
-    public String getRussianMlfb(String mlfb);
+    /**
+     * Получение датчика по id
+     *
+     * @param idSensor ид датчика
+     * @return датчик
+     */
+    Sensors getSensorById(int idSensor);
+
+    /**
+     * Получение названий позиции
+     *
+     * @param idSensor ид датчика
+     * @return список
+     */
+    List<SensorsLabels> getSensorLabels(int idSensor);
+
+    /**
+     * Получение опции
+     *
+     * @param idSensorLabels ид позиции в БД
+     * @return список
+     */
+    List<SensorsOptionNames> getSensorOptions(int idSensorLabels);
+
+    /**
+     * Получение опции по правилам для позиции
+     *
+     * @param mlfb           конфигурация
+     * @param idSensorLabels id позиции
+     * @return список
+     */
+    List<SensorsOptionNames> getSensorOptionsByRule(String mlfb, int idSensorLabels);
+
+    /**
+     * Получение опции для конфигурации
+     *
+     * @param mlfb конфигурация
+     * @return список
+     */
+    List<SensorsOptionNames> getSensorOptionsByMlfb(String mlfb);
+
+    /**
+     * Получение опции для конфигурации
+     *
+     * @param idSensor ид датчика
+     * @param mlfbB    конфигурация
+     * @return список
+     */
+    List<SensorsOptionNames> getSensorOptionsByMlfbB(int idSensor, String mlfbB);
+
+    /**
+     * Получение статуса для конфигурации
+     *
+     * @param mlfb конфигурация
+     * @return список
+     */
+    List<SensorStatus> getSensorStatus(String mlfb);
+
+    /**
+     * Получение преобраованного на русскую конфигурацию
+     *
+     * @param mlfb конфигурация
+     * @return строку
+     */
+    String getRussianMlfb(String mlfb);
 }

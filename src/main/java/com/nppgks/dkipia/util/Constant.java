@@ -4,13 +4,12 @@ public interface Constant {
 
     interface DB {
 
-        String URL = "jdbc:postgresql://localhost:5432/sensorProduction";
+        String URL = "jdbc:postgresql://localhost:5432/configurator";
         String USERNAME = "postgres";
         String PASSWORD = "123456";
     }
 
     interface MLFB {
-        String MLFB_EMPTY = ".";
         String DELIMETER_PLUS = "+";
         String DELIMETER_EMPTY = "";
         String DELIMETER_SPACE = " ";
@@ -18,9 +17,8 @@ public interface Constant {
         String DELIMETER_OPEN_BRACKET = "{";
         String DELIMETER_CLOSE_BRACKET = "}";
         String OPTION_DELIMETER = "\\+";
-        String[] UNITS = {"%", "ATM", "BAR", "BAR_A", "FTH2O", "FTH2O@20", "G/CM2", "INH2O", "INH2O@04", "INH2O@20", "INHG", "KG/CM2", "KGF/M2", "KPA", "KWH", "M3/H", "MBAR", "MBAR_A", "MMH2O", "MMH2O@04", "MMH2O@20", "MMHG", "MPA", "PA", "PSI", "TORR"};
+        String DELIMETER_POINTS = "\\.\\.\\.";
 
-        String[] PARAMSOPTION = {"Y01", "Y02", "Y21", "Y22", "Y15", "Y16"};
         String[] Y01_UNITS = {"ATM", "BAR", "BAR_A", "BAR_G", "FTH2O", "G/CM2", "G/CM2_A", "G/CM2_G", "G/CM²", "HPA", "HPA_A", "HPA_G", "INH2O", "INH2O (4°C)", "INH2O@04", "INHG", "KG/CM2", "KG/CM2_A", "KG/CM2_G", "KG/CM²", "KGF/CM", "KGF/CM2", "KGF/CM²", "KPA", "KPA_A", "MBAR", "MBAR_A", "MBAR_G", "MH2O", "MH2O (4°C)", "MH2O@04", "MMH2O", "MMH2O (4°C)", "MMH2O@04", "MMHG", "MMHG_A", "MMHG_G", "MPA", "MPA_A", "MPA_G", "PA", "PA_A", "PA_G", "PSI", "PSI_A", "PSI_G", "TORR", "TORR_A", "TORR_G", "AT", "ATA", "CMCA", "CMCE", "CMH2O", "CMHG", "CMWC", "CMWG", "CMWS", "FTH2O@04", "FTH2O@20", "INH2O@20", "INWG", "KG/M2", "KG/M2_A", "KG/M2_G", "KGF/M2", "KP/CM2", "KP/CM2_A", "KP/CM2_G", "KP/M2", "KP/M2_A", "KP/M2_G", "LBF/FT2", "MCA", "MCE", "MHG", "MMAQ", "MMCA", "MMCE", "MMH2O@20", "MMWC", "MMWG", "MMWS", "MWC", "MWG", "MWS", "N/M2", "N/M2_A", "N/M2_G", "N/MM2", "N/MM2_A", "N/MM2_G", "NM3/H"};
         String[] Y21_UNITS = {"%", "ATM", "BAR", "BAR_A", "FTH2O", "FTH2O@20", "G/CM2", "INH2O", "INH2O@04", "INH2O@20", "INHG", "KG/CM2", "KGF/M2", "KPA", "KWH", "MBAR", "MBAR_A", "MMH2O", "MMH2O@04", "MMH2O@20", "MMHG", "MPA", "PA", "PSI", "TORR"};
         String[] NEW_Y01_UNITS = {"mbar", "bar", "psi", "Pa", "kPa", "MPa", "hPa", "g/cm²", "kg/cm²", "kgf/cm²", "atm", "torr", "mmH2O", "mmH2O (4°C)", "mH2O (4°C)", "inH2O", "inH2O (4°C)", "ftH2O", "mmHg", "inHg"};

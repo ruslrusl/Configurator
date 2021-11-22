@@ -1,6 +1,9 @@
 package com.nppgks.dkipia.dao;
 
-import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.SensorStatus;
+import com.nppgks.dkipia.entity.Sensors;
+import com.nppgks.dkipia.entity.SensorsLabels;
+import com.nppgks.dkipia.entity.SensorsOptionNames;
 import com.nppgks.dkipia.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -21,39 +22,16 @@ public class SensorDAOImpl implements SensorDAO {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<SensorTypeEntity> getSensorTypes() {
-        List<SensorTypeEntity> sensorTypeEntityList = callFunction(SensorTypeEntity.class, "configurator$selectdevice()", null);
-        return sensorTypeEntityList;
-    }
-
-    @Override
-    public List<SelectionEntity> getSelections(int idSensor) {
-        Object[] inParamArr = {idSensor};
-        List<SelectionEntity> selections = callFunction(SelectionEntity.class, "configurator$selectgroupname(?)", inParamArr);
-        return selections;
-    }
-
-    @Override
-    public List<SelectOptionEntity> getSelectionOptions(int idSensor, String mlfb) {
-        Object[] inParamArr = {idSensor, mlfb};
-        System.out.println("idSensor = ["+idSensor+"], mlfb = ["+mlfb+"]");
-        List<SelectOptionEntity> selectOptions = callFunction(SelectOptionEntity.class, "configurator$selectgroups(?,?)", inParamArr);
-        return selectOptions;
-    }
-
-    @Override
     public List<Sensors> getSensors() {
-        List<Sensors> sensorList = callFunction(Sensors.class, "configurator$selectsensors()", null);
-        System.out.println(sensorList);
-        return sensorList;
+        return callFunction(Sensors.class, "configurator$selectsensors()", null);
     }
 
     @Override
     public Sensors getSensorById(int idSensor) {
         Object[] inParamArr = {idSensor};
-        List<Sensors> sensorList = callFunction(Sensors.class, "configurator$selectsensorsbyid(?)", inParamArr);
-        if (sensorList!=null) {
-            return sensorList.get(0);
+        List<Sensors> list = callFunction(Sensors.class, "configurator$selectsensorsbyid(?)", inParamArr);
+        if (list.size() > 0) {
+            return list.get(0);
         } else {
             return null;
         }
@@ -62,50 +40,48 @@ public class SensorDAOImpl implements SensorDAO {
     @Override
     public List<SensorsLabels> getSensorLabels(int idSensor) {
         Object[] inParamArr = {idSensor};
-        List<SensorsLabels> selections = callFunction(SensorsLabels.class, "configurator$selectlabels(?)", inParamArr);
-        return selections;
+        return callFunction(SensorsLabels.class, "configurator$selectlabels(?)", inParamArr);
     }
 
     @Override
     public List<SensorsOptionNames> getSensorOptions(int idSensorLabels) {
         Object[] inParamArr = {idSensorLabels};
-        List<SensorsOptionNames> selections = callFunction(SensorsOptionNames.class, "configurator$selectoptions(?)", inParamArr);
-        return selections;
+        return callFunction(SensorsOptionNames.class, "configurator$selectoptions(?)", inParamArr);
     }
 
     @Override
     public List<SensorsOptionNames> getSensorOptionsByRule(String mlfb, int idSensorLabels) {
         Object[] inParamArr = {mlfb, idSensorLabels};
-        List<SensorsOptionNames> selections = callFunction(SensorsOptionNames.class, "configurator$selectoptionsbyrule(?, ?)", inParamArr);
-        return selections;
+        return callFunction(SensorsOptionNames.class, "configurator$selectoptionsbyrule(?, ?)", inParamArr);
     }
 
     @Override
     public List<SensorsOptionNames> getSensorOptionsByMlfb(String mlfb) {
         Object[] inParamArr = {mlfb};
-        List<SensorsOptionNames> selections = callFunction(SensorsOptionNames.class, "configurator$getselectedoptionsbymlfb(?)", inParamArr);
-        return selections;
+        return callFunction(SensorsOptionNames.class, "configurator$getselectedoptionsbymlfb(?)", inParamArr);
     }
 
     @Override
     public List<SensorsOptionNames> getSensorOptionsByMlfbB(int idSensor, String mlfbB) {
         Object[] inParamArr = {idSensor, mlfbB};
-        List<SensorsOptionNames> selections = callFunction(SensorsOptionNames.class, "configurator$getselectedoptionsbyb(?, ?)", inParamArr);
-        return selections;
+        return callFunction(SensorsOptionNames.class, "configurator$getselectedoptionsbyb(?, ?)", inParamArr);
     }
 
     @Override
     public List<SensorStatus> getSensorStatus(String mlfb) {
         Object[] inParamArr = {mlfb};
-        List<SensorStatus> selections = callFunction(SensorStatus.class, "configurator$getstatus(?)", inParamArr);
-        return selections;
+        return callFunction(SensorStatus.class, "configurator$getstatus(?)", inParamArr);
     }
 
     @Override
     public String getRussianMlfb(String mlfb) {
         Object[] inParamArr = {mlfb};
         List<String> list = callFunction(String.class, "configurator$sub$changetorus(?)", inParamArr);
-        return list.get(0);
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
 
@@ -131,33 +107,7 @@ public class SensorDAOImpl implements SensorDAO {
             proc.execute();
             ResultSet results = (ResultSet) proc.getObject(1);
             while (results.next()) {
-                if (tClass.isAssignableFrom(SensorTypeEntity.class)) {
-                    SensorTypeEntity sensorTypeEntity = new SensorTypeEntity();
-                    sensorTypeEntity.setId((int) results.getObject(1));
-                    sensorTypeEntity.setName(results.getObject(2).toString());
-                    sensorTypeEntity.setDescr(results.getObject(3).toString());
-                    sensorTypeEntity.setMlfbstandart(results.getObject(4).toString());
-                    list.add(tClass.cast(sensorTypeEntity));
-                } else if (tClass.isAssignableFrom(SelectionEntity.class)) {
-                    SelectionEntity selectionEntity = new SelectionEntity();
-                    selectionEntity.setId((int) results.getObject(1));
-                    selectionEntity.setGroup(results.getObject(2).toString());
-                    if (results.getObject(3) != null) {
-                        selectionEntity.setName(results.getObject(3).toString());
-                    }
-                    selectionEntity.setMain((boolean)results.getObject(4));
-                    list.add(tClass.cast(selectionEntity));
-                } else if (tClass.isAssignableFrom(SelectOptionEntity.class)) {
-                    SelectOptionEntity selectOptionEntity = new SelectOptionEntity();
-                    selectOptionEntity.setId((int) results.getObject(1));
-                    selectOptionEntity.setName(results.getObject(2).toString());
-                    selectOptionEntity.setGroup(results.getObject(3).toString());
-                    if (results.getObject(4) != null) {
-                        selectOptionEntity.setDescr(results.getObject(4).toString());
-                    }
-                    selectOptionEntity.setPossible((boolean) results.getObject(5));
-                    list.add(tClass.cast(selectOptionEntity));
-                } else if (tClass.isAssignableFrom(Sensors.class)) {
+                if (tClass.isAssignableFrom(Sensors.class)) {
                     Sensors sensors = new Sensors();
                     sensors.setId(results.getInt(1));
                     sensors.setName(results.getString(2));
@@ -204,7 +154,7 @@ public class SensorDAOImpl implements SensorDAO {
             proc.close();
             conn.close();
         } catch (SQLException ex) {
-            log.error("Ошибка при выполнении функции "+procedureName, ex);
+            log.error("Ошибка при выполнении функции " + procedureName, ex);
         }
         return list;
     }

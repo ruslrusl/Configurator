@@ -1,15 +1,12 @@
 package com.nppgks.dkipia.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@ToString
 public class Sensors {
 
     @Getter
@@ -61,6 +58,12 @@ public class Sensors {
             sensorsLabels = new ArrayList<>();
         }
         sensorsLabels.add(sensorLabel);
+    }
+
+    @SneakyThrows
+    public String toString() {
+        ObjectMapper om = new ObjectMapper();
+        return om.writeValueAsString(this);
     }
 
 }
