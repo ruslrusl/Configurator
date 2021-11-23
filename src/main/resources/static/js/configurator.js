@@ -21,6 +21,16 @@ $(document).ready(function () {
             window.location.hash = e.target.hash;
         }
     });
+
+    $('#addMlfbManually').on('show.bs.modal', function (event) {
+
+        let mlfb = getSpanMlfbRus();
+        let spanmlfbb = getSpanMlfbB();
+        let spanmlfbc = getSpanMlfbC();
+        let text = mlfb + " "+spanmlfbb+" "+spanmlfbc;
+        $("#modalMlfb").val(text);
+    })
+
     let hashArr = getHashArray();
     if (hashArr != null) {
         if (hashArr.includes('option')) {
@@ -46,6 +56,32 @@ $(document).ready(function () {
         window.location.hash = 'main';
     }
 });
+
+function modalApply() {
+    let mlfb = $("#modalMlfb").val().trim();
+    if (mlfb.startsWith("7MF")) {
+        submitForm(mlfb, "", "", "", "8", "", 1);
+    } else {
+        let j = 9;
+        let russtandart = $("#russtandart").text();
+        if (russtandart.startsWith("КМ35М")) {
+            j = 7;
+        }
+        let tempMlfb = mlfb.replace("-","");
+        russtandart = russtandart.replace("-","");
+        console.log(j);
+        console.log(russtandart);
+        console.log(tempMlfb);
+        if (tempMlfb.substring(0,j) != russtandart.substring(0,j)) {
+            loginfo("Номер заказа должно начинаться c "+$("#russtandart").text().substring(0,j+1), 4);
+        } else {
+            submitForm(mlfb, "", "", "", "8", "", 1);
+        }
+    }
+
+
+    //submitForm(mlfb, "", "", "", "8", "", 1);
+}
 
 function getHashArray() {
     if (window.location.hash) {
@@ -74,6 +110,13 @@ function getSpanMlfb() {
     return mlfbText;
 }
 
+function getSpanMlfbRus() {
+    var all = $(".rusmlfbclass").map(function() {
+        return this.innerHTML;
+    }).get();
+    return all.join("");
+}
+
 function getSpanMlfbB() {
     let mlfbText = "";
     for (let i = 1; i <= 40; i++) {
@@ -93,9 +136,6 @@ function getSpanMlfbC() {
     let mlfbText = "";
     for (let i = 1; i <= 40; i++) {
         if ($("#lc" + i).text()) {
-            console.log($("#lc" + i).text());
-            console.log($("#lc" + i).text().trim());
-            //mlfbText = mlfbText + "{" + $("#lc" + i).text().trim() + "}";
             if (mlfbText!="") {
                 mlfbText = mlfbText + " ";
             }
@@ -126,37 +166,25 @@ function removeGroupOption(group, name) {
                 arrspanmlfbb.splice(index, 1);
             }
             spanmlfbb = arrspanmlfbb.join("+");
-
-            console.log(spanmlfbc);
             let arrspanmlfbc = spanmlfbc.split("}");
-            console.log(arrspanmlfbc);
-
             arrspanmlfbc = arrspanmlfbc.filter(function (item) {
                 return item.indexOf("{"+name) !== 0;
             });
-
-            console.log(arrspanmlfbc);
-            //
-            // var index = arrspanmlfbc.indexOf("{"+name);
-            // console.log(index);
-            // if (index !== -1) {
-            //     arrspanmlfbc.splice(index, 1);
-            // }
             spanmlfbc = arrspanmlfbc.filter(i => i!="")
                 .map(i => i + '}').join("");
-            console.log(spanmlfbc);
             name = "0";
         }
     }
 
-    $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
-    $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
-    $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbc + '"/> ');
-    $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
-    $("#mlfbForm").append('<input type="hidden" name="group" value= "' + group + '"/> ');
-    $("#mlfbForm").append('<input type="hidden" name="option" value= "' + name + '"/> ');
-    $("#mlfbForm").attr('action', getHrefForJump(group));
-    $("#mlfbForm").submit();
+    // $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
+    // $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
+    // $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbc + '"/> ');
+    // $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
+    // $("#mlfbForm").append('<input type="hidden" name="group" value= "' + group + '"/> ');
+    // $("#mlfbForm").append('<input type="hidden" name="option" value= "' + name + '"/> ');
+    // $("#mlfbForm").attr('action', getHrefForJump(group));
+    // $("#mlfbForm").submit();
+    submitForm(mlfb, spanmlfbb, spanmlfbc, spanmlfbсText, group, name, 0);
 }
 
 function isNumeric(value) {
@@ -272,15 +300,32 @@ function jumpNextGroup(option, group, isIncrease, element) {
     console.log("here!!!!!!!");
     console.log("groupInt = "+groupInt);
     if (isSubmit == "") {
-        $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + getSpanMlfb() + '"/> ');
-        $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
-        $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbс + '"/> ');
-        $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
-        $("#mlfbForm").append('<input type="hidden" name="group" value= "' + groupInt + '"/> ');
-        $("#mlfbForm").append('<input type="hidden" name="option" value= "' + option + '"/> ');
-        $("#mlfbForm").attr('action', getHrefForJump(groupInt));
-        $("#mlfbForm").submit();
+        // $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + getSpanMlfb() + '"/> ');
+        // $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
+        // $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbс + '"/> ');
+        // $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
+        // $("#mlfbForm").append('<input type="hidden" name="group" value= "' + groupInt + '"/> ');
+        // $("#mlfbForm").append('<input type="hidden" name="option" value= "' + option + '"/> ');
+        // $("#mlfbForm").attr('action', getHrefForJump(groupInt));
+        // $("#mlfbForm").submit();
+
+        submitForm(getSpanMlfb(), spanmlfbb, spanmlfbс, spanmlfbсText, groupInt, option, 0);
     } else {
         loginfo(isSubmit, 4);
     }
+}
+
+function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
+
+    console.log("mlfb = ["+mlfb+"], mlfbb= ["+mlfbb+"], mlfbс= ["+mlfbс+"], mlfbсText= ["+mlfbсText+"], group= ["+group+"], option= ["+option+"] ")
+
+    $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + mlfbb + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + mlfbс + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + mlfbсText + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="group" value= "' + group + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="option" value= "' + option + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="isformat" value= "' + isformat + '"/> ');
+    $("#mlfbForm").attr('action', getHrefForJump(group));
+    $("#mlfbForm").submit();
 }

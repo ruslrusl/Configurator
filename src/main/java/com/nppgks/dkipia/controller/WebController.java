@@ -59,7 +59,7 @@ public class WebController {
     }
 
     @PostMapping("/configurator/{id}")
-    public String getMlfbSelectionPost(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, Model model) {
+    public String getMlfbSelectionPost(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, Model model) {
         log.info("PostMapping");
         log.info("mlfb = " + mlfb);
         log.info("mlfbB = " + mlfbB);
@@ -67,12 +67,25 @@ public class WebController {
         log.info("mlfbCText = " + mlfbCText);
         log.info("option = " + option);
         log.info("group = " + group);
+        log.info("isformat = " + isformat);
 
         Sensors sensor = sensorService.getSensorById(id);
         //формируем необходимые label
         List<SensorsLabels> sensorsLabels = sensorService.getSensorLabels(id);
         //выбираем только необходимую опции у label, а не все параметры
         sensorService.setActiveLabelByPosition(sensorsLabels, group);
+
+        if (isformat==1) {
+            List<String> separateList = sensorService.getSeparateMlfb(mlfb);
+            if (separateList!=null) {
+                mlfb = separateList.get(0);
+                mlfbB = separateList.get(1);
+                mlfbC = separateList.get(2);
+                log.info("updated mlfb = " + mlfb);
+                log.info("updated mlfbB = " + mlfbB);
+                log.info("updated mlfbC = " + mlfbC);
+            }
+        }
         //формируем текущую строку B и C
         String[] mlfbBC = sensorService.getMlfbBAndMlfbC(sensorsLabels, mlfbB, mlfbC, group, option, mlfbCText);
         //сохраняем промежуточные данные

@@ -80,4 +80,12 @@ public interface SensorDAO {
      * @return строку
      */
     String getRussianMlfb(String mlfb);
+
+    /**
+     * Получение отдельно конфигурации, B-строки, С-строки
+     *
+     * @param mlfb конфигурация полностью
+     * @return список(конфигурация, B - строка, С - строка)
+     */
+    List<String> getSeparateMlfb(String mlfb);
 }

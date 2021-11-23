@@ -84,6 +84,12 @@ public class SensorDAOImpl implements SensorDAO {
         }
     }
 
+    @Override
+    public List<String> getSeparateMlfb(String mlfb) {
+        Object[] inParamArr = {mlfb};
+        return callFunction(String.class, "configurator$separatemlfb(?)", inParamArr);
+    }
+
 
     private <T> List<T> callFunction(Class<T> tClass, String procedureName, Object[] inParamArr) {
         List<T> list = new ArrayList<>();

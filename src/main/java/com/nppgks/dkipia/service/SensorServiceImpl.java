@@ -175,6 +175,11 @@ public class SensorServiceImpl implements SensorService {
         return sensorDAO.getRussianMlfb(mlfb);
     }
 
+    @Override
+    public List<String> getSeparateMlfb(String mlfb) {
+        return sensorDAO.getSeparateMlfb(mlfb);
+    }
+
     private void setSelectTypeForSensorsLabels(List<SensorsLabels> sensorsLabels, String rule, int status) {
         String find = Util.getRuleValue(rule, true);
         if (!find.isEmpty()) {
@@ -190,5 +195,7 @@ public class SensorServiceImpl implements SensorService {
         sensor.setMlfbB(mlfbB);
         sensor.setMlfbC(mlfbC);
     }
+
+
 
 }
