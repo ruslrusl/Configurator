@@ -115,7 +115,7 @@
                 <version>2.4.3</version>
                 <configuration>
                     <fork>true</fork>
-                    <mainClass>com.nppgks.farmweb.FarmwebApplication</mainClass>
+                    <mainClass>com.nppgks.dkipia.ConfigurationApp</mainClass>
                 </configuration>
                 <executions>
                     <execution>
