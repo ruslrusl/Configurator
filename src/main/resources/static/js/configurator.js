@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $('.nav-tabs a').on('shown.bs.tab', function (e) {
         let hashArr = getHashArray();
         if (hashArr != null) {
@@ -23,12 +22,7 @@ $(document).ready(function () {
     });
 
     $('#addMlfbManually').on('show.bs.modal', function (event) {
-
-        let mlfb = getSpanMlfbRus();
-        let spanmlfbb = getSpanMlfbB();
-        let spanmlfbc = getSpanMlfbC();
-        let text = mlfb + " "+spanmlfbb+" "+spanmlfbc;
-        $("#modalMlfb").val(text);
+        $("#modalMlfb").val(getFullMlfb(1));
     })
 
     let hashArr = getHashArray();
@@ -57,6 +51,17 @@ $(document).ready(function () {
     }
 });
 
+function getFullMlfb(isRus) {
+    let mlfb = getSpanMlfbRus();
+    if (!isRus) {
+        mlfb = getSpanMlfb();
+    }
+    let spanmlfbb = getSpanMlfbB();
+    let spanmlfbc = getSpanMlfbC();
+    let text = mlfb + " "+spanmlfbb+" "+spanmlfbc;
+    return text;
+}
+
 function modalApply() {
     let mlfb = $("#modalMlfb").val().trim();
     if (mlfb.startsWith("7MF")) {
@@ -78,9 +83,6 @@ function modalApply() {
             submitForm(mlfb, "", "", "", "8", "", 1);
         }
     }
-
-
-    //submitForm(mlfb, "", "", "", "8", "", 1);
 }
 
 function getHashArray() {
@@ -175,36 +177,11 @@ function removeGroupOption(group, name) {
             name = "0";
         }
     }
-
-    // $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
-    // $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
-    // $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbc + '"/> ');
-    // $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
-    // $("#mlfbForm").append('<input type="hidden" name="group" value= "' + group + '"/> ');
-    // $("#mlfbForm").append('<input type="hidden" name="option" value= "' + name + '"/> ');
-    // $("#mlfbForm").attr('action', getHrefForJump(group));
-    // $("#mlfbForm").submit();
     submitForm(mlfb, spanmlfbb, spanmlfbc, spanmlfbсText, group, name, 0);
 }
 
 function isNumeric(value) {
     return /^-?\d+$/.test(value);
-}
-
-function insertMlfbB(spanmlfbb, option) {
-    if (spanmlfbb != "") {
-        if (!spanmlfbb.split("+").includes(option)) {
-            spanmlfbb = spanmlfbb + "+" + option;
-        }
-    } else {
-        spanmlfbb = option;
-    }
-    return spanmlfbb;
-}
-
-function insertMlfbC(spanmlfbс, option, text) {
-    spanmlfbс = spanmlfbс + " {" + option + ": " + text + "}";
-    return spanmlfbс;
 }
 
 function jumpNextGroup(option, group, isIncrease, element) {
@@ -223,27 +200,20 @@ function jumpNextGroup(option, group, isIncrease, element) {
             $("#lm" + group).text(option);
             groupInt = groupInt + 1;
         }
-
         if (groupInt > 16) {
             groupInt = 16;
         }
     } else {//опции
 
         if (option != 0) {
-
-
             console.log("*******************");
             console.log(element);
             console.log(element.type);
             console.log(element.checked);
-
             if (element!==null && element.type=='checkbox' && element.checked==false) {
-                console.log("here checkbox element.checked==false");
-                console.log("removeGroupOption");
                 removeGroupOption(group, option)
             } else {
                 let index = arrY.indexOf(option);
-                console.log("here index = " + index);
                 if (index !== -1) {
                     if (option == "Y15" || option == "Y16" || option == "Y17" || option == "Y25"|| option == "Y32" || option == "Y99") {
                         spanmlfbсText = $("#" + option + "input").val();
@@ -281,34 +251,18 @@ function jumpNextGroup(option, group, isIncrease, element) {
                             spanmlfbсText = $("#" + option + "select option:selected").text();
                         }
                     }
-                    console.log("spanmlfbсText = "+spanmlfbсText);
                     if (spanmlfbсText!==null && spanmlfbсText) {
                         spanmlfbсText = option + ": " + spanmlfbсText;
                     } else {
                         isSubmit = "Введите дополнительные данные для опции " + option;
                         $("input[name='radio" + option + "']").prop('checked', false);
                     }
-
-                } else {
-                    //spanmlfbb = insertMlfbB(spanmlfbb, option);
                 }
             }
         }
-
         groupInt = group;
     }
-    console.log("here!!!!!!!");
-    console.log("groupInt = "+groupInt);
     if (isSubmit == "") {
-        // $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + getSpanMlfb() + '"/> ');
-        // $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + spanmlfbb + '"/> ');
-        // $("#mlfbForm").append('<input type="hidden" name="mlfbC" value= "' + spanmlfbс + '"/> ');
-        // $("#mlfbForm").append('<input type="hidden" name="mlfbCText" value= "' + spanmlfbсText + '"/> ');
-        // $("#mlfbForm").append('<input type="hidden" name="group" value= "' + groupInt + '"/> ');
-        // $("#mlfbForm").append('<input type="hidden" name="option" value= "' + option + '"/> ');
-        // $("#mlfbForm").attr('action', getHrefForJump(groupInt));
-        // $("#mlfbForm").submit();
-
         submitForm(getSpanMlfb(), spanmlfbb, spanmlfbс, spanmlfbсText, groupInt, option, 0);
     } else {
         loginfo(isSubmit, 4);
@@ -328,4 +282,9 @@ function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
     $("#mlfbForm").append('<input type="hidden" name="isformat" value= "' + isformat + '"/> ');
     $("#mlfbForm").attr('action', getHrefForJump(group));
     $("#mlfbForm").submit();
+}
+
+function addToBasket() {
+    let mlfb = getFullMlfb(1);
+    loginfo("Заказ "+mlfb+" добавлен в корзину", 1);
 }

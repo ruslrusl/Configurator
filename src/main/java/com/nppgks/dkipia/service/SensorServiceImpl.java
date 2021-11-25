@@ -8,7 +8,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SensorServiceImpl implements SensorService {
@@ -178,6 +180,30 @@ public class SensorServiceImpl implements SensorService {
     @Override
     public List<String> getSeparateMlfb(String mlfb) {
         return sensorDAO.getSeparateMlfb(mlfb);
+    }
+
+    @Override
+    public List<Complete> getComplete(boolean isused) {
+        List<Complete> list = sensorDAO.getComplete();
+        if (isused) {
+            List<Complete> listComplete = list.stream().filter(s->s.getIsused()==1).collect(Collectors.toList());
+            return listComplete;
+        } else {
+            return list;
+        }
+    }
+
+    @Override
+    public SensorFull getSensorFull(String mlfb) {
+        return sensorDAO.getSensorFull(mlfb);
+    }
+
+    @Override
+    public List<SensorFull> getSensorFullList(String mlfb) {
+        SensorFull sensorFull = sensorDAO.getSensorFull(mlfb);
+        List<SensorFull> list = new ArrayList<>();
+        list.add(sensorFull);
+        return list;
     }
 
     private void setSelectTypeForSensorsLabels(List<SensorsLabels> sensorsLabels, String rule, int status) {

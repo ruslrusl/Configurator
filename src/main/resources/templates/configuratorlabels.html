@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="common/header :: common-header"></div>
     <script th:src="@{/js/configurator.js}"></script>
@@ -9,7 +9,6 @@
 <div th:replace="common/navigation::common-nav"/>
 
 <div class="container-fluid">
-
     <h5 id="rusname" th:text="${sensor.getRusname()}"/>
     <span id="russtandart" style="display: none" th:text="${sensor.getRusmlfbstandart()}"></span>
 
@@ -19,9 +18,11 @@
                 <img th:case="1" th:src="@{/css/images/applicable3_OK.gif}"></img>
                 <img th:case="2" th:src="@{/css/images/applicable3_BE.gif}"></img>
                 <img th:case="3" th:src="@{/css/images/applicable3_NO.gif}"></img>
+                <button th:case="1" type="button" class="btn btn-primary" th:text="#{btn.basket.add}"></button>
             </span>
-            <table style="display: inline-block;" class="h6" th:utext="${sensorStatus.getMessage()}">
+            <table style="display: inline-block; vertical-align: middle;" class="h6" th:utext="${sensorStatus.getMessage()}">
             </table>
+            <button th:if="${sensorStatus.getStatus()}==1" type="button" class="btn btn-primary" th:text="#{btn.basket.add}" onclick="addToBasket()"></button>
         </span>
         <span th:unless="${sensorStatus!=null}">
             <img th:src="@{/css/images/applicable3_BE.gif}"></img>

@@ -15,3 +15,7 @@ input[type='number']{
 .cursorpointer {
     cursor: pointer;
 }
+
+.basketinput {
+    width: 100px;
+}

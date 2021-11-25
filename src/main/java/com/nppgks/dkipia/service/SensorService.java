@@ -1,8 +1,6 @@
 package com.nppgks.dkipia.service;
 
-import com.nppgks.dkipia.entity.SensorStatus;
-import com.nppgks.dkipia.entity.Sensors;
-import com.nppgks.dkipia.entity.SensorsLabels;
+import com.nppgks.dkipia.entity.*;
 
 import java.util.List;
 
@@ -126,4 +124,29 @@ public interface SensorService {
      * @return список(конфигурация, B - строка, С - строка)
      */
     List<String> getSeparateMlfb(String mlfb);
+
+    /**
+     * Получение списка комплектующих
+     *
+     * @param isused 1-только используемые
+     * @return список
+     */
+    List<Complete> getComplete(boolean isused);
+
+    /**
+     * Получение описания по конфигурации
+     *
+     * @param mlfb конфигурация полностью
+     * @return
+     */
+    SensorFull getSensorFull(String mlfb);
+
+    /**
+     * Получение спика описания по конфигурации
+     *
+     * @param mlfb конфигурация полностью
+     * @return список
+     */
+    List<SensorFull> getSensorFullList(String mlfb);
+
 }

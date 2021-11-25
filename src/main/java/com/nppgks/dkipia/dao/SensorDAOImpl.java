@@ -1,9 +1,6 @@
 package com.nppgks.dkipia.dao;
 
-import com.nppgks.dkipia.entity.SensorStatus;
-import com.nppgks.dkipia.entity.Sensors;
-import com.nppgks.dkipia.entity.SensorsLabels;
-import com.nppgks.dkipia.entity.SensorsOptionNames;
+import com.nppgks.dkipia.entity.*;
 import com.nppgks.dkipia.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,12 +88,27 @@ public class SensorDAOImpl implements SensorDAO {
         return callFunction(String.class, "configurator$separatemlfb(?)", inParamArr);
     }
 
+    @Override
+    public List<Complete> getComplete() {
+        return callFunction(Complete.class, "configurator$getcomplete()", null);
+    }
+
+    @Override
+    public SensorFull getSensorFull(String mlfb) {
+        Object[] inParamArr = {mlfb};
+        List<SensorFull> list = callFunction(SensorFull.class, "configurator$getsensordescbymlfb(?)", inParamArr);
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
 
     private <T> List<T> callFunction(Class<T> tClass, String procedureName, Object[] inParamArr) {
         List<T> list = new ArrayList<>();
         int j = 2;
-        try {
-            Connection conn = jdbcTemplate.getDataSource().getConnection();
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
             conn.setAutoCommit(false);
             CallableStatement proc = conn.prepareCall("{? = call " + procedureName + " }");
             if (inParamArr != null) {
@@ -154,15 +167,36 @@ public class SensorDAOImpl implements SensorDAO {
                 } else if (tClass.isAssignableFrom(String.class)) {
                     String result = results.getString(1);
                     list.add(tClass.cast(result));
+                } else if (tClass.isAssignableFrom(Complete.class)) {
+                    Complete complete = new Complete();
+                    complete.setId(results.getInt(1));
+                    complete.setName(results.getString(2));
+                    complete.setPrice(getFormattedDouble(results.getDouble(3)));
+                    complete.setCoef(results.getDouble(4));
+                    complete.setOrdernumb(results.getInt(5));
+                    complete.setIsused(results.getInt(6));
+                    list.add(tClass.cast(complete));
+                } else if (tClass.isAssignableFrom(SensorFull.class)) {
+                    SensorFull sensorFull = new SensorFull();
+                    sensorFull.setId(results.getInt(1));
+                    sensorFull.setMlfb(results.getString(2));
+                    sensorFull.setRusmlfb(results.getString(3));
+                    sensorFull.setDescr(results.getString(4));
+                    sensorFull.setPrice(getFormattedDouble(results.getDouble(5)));
+                    list.add(tClass.cast(sensorFull));
                 }
             }
             results.close();
             proc.close();
-            conn.close();
         } catch (SQLException ex) {
             log.error("Ошибка при выполнении функции " + procedureName, ex);
         }
         return list;
+    }
+
+    private static String getFormattedDouble(Double d) {
+        final DecimalFormat df = new DecimalFormat("0.00");
+        return df.format(d).replace(",",".");
     }
 
 }

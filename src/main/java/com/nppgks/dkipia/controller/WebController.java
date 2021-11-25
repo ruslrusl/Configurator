@@ -1,9 +1,6 @@
 package com.nppgks.dkipia.controller;
 
-import com.nppgks.dkipia.entity.SensorStatus;
-import com.nppgks.dkipia.entity.SensorStatusExtension;
-import com.nppgks.dkipia.entity.Sensors;
-import com.nppgks.dkipia.entity.SensorsLabels;
+import com.nppgks.dkipia.entity.*;
 import com.nppgks.dkipia.service.SensorService;
 import com.nppgks.dkipia.util.Constant;
 import com.nppgks.dkipia.util.Util;
@@ -34,8 +31,22 @@ public class WebController {
         return "configurator";
     }
 
+    @GetMapping("/basket")
+    public String getBasket(Model model) {
+        String mlfbTest = "КМ35М-0300-1QB01-5BF0-Z D42+E24+Y01+Y15 {Y01: 0 ... 10 bar}{Y15: PT1}";
+        log.info("Basket GetMapping");
+        //TODO все заказы из корзины
+        List<Complete> completeList = sensorService.getComplete(true);
+        List<SensorFull> sensorFullList = sensorService.getSensorFullList(mlfbTest);
+
+        model.addAttribute("comletes",completeList);
+        model.addAttribute("sensorfull",sensorFullList);
+        return "basket";
+    }
+
+
     @GetMapping("/configurator/{id}")
-    public String getMlfbSelectionGet(@PathVariable int id, Model model) {
+    public String getConfigurator(@PathVariable int id, Model model) {
         log.info("GetMapping");
         Sensors sensor = sensorService.getSensorById(id);
         List<SensorsLabels> sensorsLabels = sensorService.getSensorLabels(id);
@@ -59,7 +70,7 @@ public class WebController {
     }
 
     @PostMapping("/configurator/{id}")
-    public String getMlfbSelectionPost(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, Model model) {
+    public String getConfigurator(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, Model model) {
         log.info("PostMapping");
         log.info("mlfb = " + mlfb);
         log.info("mlfbB = " + mlfbB);

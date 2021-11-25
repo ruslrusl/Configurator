@@ -1,9 +1,6 @@
 package com.nppgks.dkipia.dao;
 
-import com.nppgks.dkipia.entity.SensorStatus;
-import com.nppgks.dkipia.entity.Sensors;
-import com.nppgks.dkipia.entity.SensorsLabels;
-import com.nppgks.dkipia.entity.SensorsOptionNames;
+import com.nppgks.dkipia.entity.*;
 
 import java.util.List;
 
@@ -88,4 +85,19 @@ public interface SensorDAO {
      * @return список(конфигурация, B - строка, С - строка)
      */
     List<String> getSeparateMlfb(String mlfb);
+
+    /**
+     * Получение списка комплектующих
+     *
+     * @return список
+     */
+    List<Complete> getComplete();
+
+    /**
+     * Получение описания по конфигурации
+     *
+     * @param mlfb конфигурация полностью
+     * @return
+     */
+    SensorFull getSensorFull(String mlfb);
 }
