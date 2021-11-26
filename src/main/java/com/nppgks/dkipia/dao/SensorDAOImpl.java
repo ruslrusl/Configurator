@@ -104,7 +104,6 @@ public class SensorDAOImpl implements SensorDAO {
         }
     }
 
-
     private <T> List<T> callFunction(Class<T> tClass, String procedureName, Object[] inParamArr) {
         List<T> list = new ArrayList<>();
         int j = 2;
@@ -175,6 +174,9 @@ public class SensorDAOImpl implements SensorDAO {
                     complete.setCoef(results.getDouble(4));
                     complete.setOrdernumb(results.getInt(5));
                     complete.setIsused(results.getInt(6));
+                    complete.setDescr(results.getString(7));
+                    complete.setProvider(results.getString(8));
+                    complete.setUnit(results.getString(9));
                     list.add(tClass.cast(complete));
                 } else if (tClass.isAssignableFrom(SensorFull.class)) {
                     SensorFull sensorFull = new SensorFull();

@@ -1,14 +1,13 @@
-package com.nppgks.dkipia.entity;
+package com.nppgks.dkipia.entity.outside;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-public class Complete {
-    @Getter
-    @Setter
-    private int id;
+@NoArgsConstructor
+public class Jcomplete {
 
     @Getter
     @Setter
@@ -16,31 +15,39 @@ public class Complete {
 
     @Getter
     @Setter
-    private String price;
-
-    @Getter
-    @Setter
-    private Double coef;
-
-    @Getter
-    @Setter
-    private int ordernumb;
-
-    @Getter
-    @Setter
-    private int isused;
-
-    @Getter
-    @Setter
     private String descr;
 
     @Getter
     @Setter
-    private String provider;
+    private String price;
+
+    @Getter
+    @Setter
+    private String count;
+
+    @Getter
+    @Setter
+    private String pricecount;
+
+    @Getter
+    @Setter
+    private String coef;
+
+    @Getter
+    @Setter
+    private String pricecoef;
+
+    @Getter
+    @Setter
+    private String pricetotal;
 
     @Getter
     @Setter
     private String unit;
+
+    @Getter
+    @Setter
+    private String provider;
 
     @SneakyThrows
     public String toString() {

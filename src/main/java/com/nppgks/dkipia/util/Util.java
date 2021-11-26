@@ -5,6 +5,7 @@ import com.nppgks.dkipia.entity.SensorStatusExtension;
 import com.nppgks.dkipia.entity.Sensors;
 import com.nppgks.dkipia.entity.SensorsLabels;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,6 +133,18 @@ public class Util {
             }
         }
         sb.append("<tr><td style=\"" + stylePaddingLeft + styleColor + "\" class=\"cursorpointer\"><span onclick=\"jumpNextGroup(0,'" + Util.getRuleValue(rule, true) + "', 0, this)\"> =>" + returnRule + "</span></td></tr>");
+    }
 
+    public static String generateFileNameWithDirectory(String name) {
+        DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String dir = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
+        String result = dir+name+"_"+timeStampPattern.format(java.time.LocalDateTime.now())+Constant.FILE.EXTENSION;
+        return result;
+    }
+
+    public static String getFileNameSpecification() {
+        String dir = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY_TEMPLATE : Constant.FILE.DIRECTORY_TEMPLATE;
+        String result = dir+Constant.FILE.FILENAME_SPECIFICATION;
+        return result;
     }
 }

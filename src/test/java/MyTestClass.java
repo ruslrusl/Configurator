@@ -30,12 +30,12 @@ public class MyTestClass {
 //        List<String> listMlfbс =  Util.separateString("{Y99:sdfsdf}", 3);
 
 
-        String[] split = "{Y99:sdfsdf}".split(Constant.MLFB.DELIMETER_CLOSE_BRACKET);
-        System.out.println(split.length);
-        List<String> result = Arrays.asList(split)
-                .stream()
-                .map(o-> o = o.substring(1))
-                .collect(Collectors.toList());
+//        String[] split = "{Y99:sdfsdf}".split(Constant.MLFB.DELIMETER_CLOSE_BRACKET);
+//        System.out.println(split.length);
+//        List<String> result = Arrays.asList(split)
+//                .stream()
+//                .map(o-> o = o.substring(1))
+//                .collect(Collectors.toList());
 
 
 
@@ -46,7 +46,7 @@ public class MyTestClass {
 //        list.add("asfas");
 //        String str = list.stream().map(o-> o = Constant.MLFB.DELIMETER_OPEN_BRACKET+o+Constant.MLFB.DELIMETER_CLOSE_BRACKET)
 //                            .collect(Collectors.joining(Constant.MLFB.DELIMETER_EMPTY));
-        System.out.println(result);
+//        System.out.println(result);
 
     }
 

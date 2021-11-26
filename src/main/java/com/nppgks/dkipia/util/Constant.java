@@ -2,6 +2,8 @@ package com.nppgks.dkipia.util;
 
 public interface Constant {
 
+    boolean ISTEST = true;
+
     interface DB {
 
         String URL = "jdbc:postgresql://localhost:5432/configurator";
@@ -41,5 +43,22 @@ public interface Constant {
         int WARN = 2;
         int ERROR = 3;
         String NOT_COMPLETE = "Укажите, пожалуйста, свойства продукта";
+    }
+
+    interface FILE {
+        String DIRECTORY = "/web/configurator/files/";
+        String TEST_DIRECTORY = "C:\\java\\IdeaProjects\\Configurator\\files\\";
+
+        String DIRECTORY_TEMPLATE = "/web/configurator/templates/";
+        String TEST_DIRECTORY_TEMPLATE = "C:\\java\\IdeaProjects\\Configurator\\templates\\";
+
+        String FILENAME_SPECIFICATION = "Закупочная спецификация 2.0.xlsx";
+
+        String EXTENSION = ".xlsx";
+        String EXPORT_FILE_MLFB = "code";
+        String EXPORT_FILE_MLFB_DESC = "code_option";
+        String EXPORT_FILE_TKP = "tkp";
+        String EXPORT_FILE_MLFB_INDUSTRY = "mlfb";
+        String EXPORT_FILE_SPECIFICATION = "specification";
     }
 }
