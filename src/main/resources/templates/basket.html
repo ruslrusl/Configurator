@@ -43,6 +43,7 @@
     <table class="table table-hover table-bordered">
         <thead>
         <tr>
+            <th scope="col"></th>
             <th scope="col" th:text="#{btn.basket.numb}"></th>
             <th scope="col" th:text="#{btn.basket.name}"></th>
             <th scope="col" th:text="#{btn.basket.descr}"></th>
@@ -57,6 +58,12 @@
         <tbody>
         <th:block th:each="sensor : ${sensorfull}">
             <tr th:id="'rowsensor'+${sensorStat.index+1}">
+                <td>
+                    <button class="btn btn-default" th:onclick="'removeSensor('+${sensorStat.index+1}+')'">
+                        <img th:src="@{/css/images/bi-trash.svg}"></img>
+                    </button>
+                </td>
+
                 <th scope="row" th:id="'boxnumber'+${sensorStat.index+1}" th:text="${sensorStat.index+1}"></th>
                 <td th:id="'boxmlfbrus'+${sensorStat.index+1}" th:text="${sensor.getRusmlfb()}"></td>
                 <td style="display: none" th:id="'boxmlfb'+${sensorStat.index+1}" th:text="${sensor.getMlfb()}"></td>
@@ -70,6 +77,7 @@
                 <td th:id="'boxpricetotal'+${sensorStat.index+1}"></td>
             </tr>
             <tr th:id="'rowсompletename'+${sensorStat.index+1}">
+                <td></td>
                 <td>
                     <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.basket.additional.add}"
                             th:onclick="'addComplete('+${sensorStat.index+1}+')'"></button>
@@ -77,7 +85,7 @@
                 <td>В комплекте:</td>
             </tr>
             <tr th:id="'rowtotal'+${sensorStat.index+1}">
-                <td th:id="'boxtotalname'+${sensorStat.index+1}" colspan="7" th:text="#{btn.basket.total}"
+                <td th:id="'boxtotalname'+${sensorStat.index+1}" colspan="8" th:text="#{btn.basket.total}"
                     class="text-right font-weight-bold"></td>
                 <td th:id="'boxtotalpricecoef'+${sensorStat.index+1}" class="font-weight-bold"></td>
                 <td th:id="'boxtotalpricetotal'+${sensorStat.index+1}" class="font-weight-bold"></td>

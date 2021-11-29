@@ -65,6 +65,7 @@ function addComplete(rownumber) {
             let btnDel = '<button type="button" class="btn btn-outline-dark btn-sm" onclick="removeComplete(\'' + newname + '\')">Удалить</button>';
             let select = getSelectComplete(rownumber, i);
             $("#" + oldelname).after('<tr id="' + newname + '">' +
+                '<td></td>' +
                 '<td>' + btnDel + '</td>' +
                 '<td>' + select + '</td>' +
                 '<td id="completedescr' + rownumber + i + '"></td>' +
@@ -251,5 +252,20 @@ function basketExport(type) {
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.responseType = "blob";
     xhttp.send(modelJson);
+}
+
+function removeSensor(id) {
+    let mlfbrus = $("#boxmlfbrus" + id).text();
+    let json = JSON.stringify(mlfbrus);
+
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            location.reload();
+        }
+    };
+    xhttp.open("POST", "/removefrombasket", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(json);
 
 }
