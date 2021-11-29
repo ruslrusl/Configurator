@@ -1,9 +1,12 @@
 package com.nppgks.dkipia.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nppgks.dkipia.entity.SensorStatus;
 import com.nppgks.dkipia.entity.SensorStatusExtension;
 import com.nppgks.dkipia.entity.Sensors;
 import com.nppgks.dkipia.entity.SensorsLabels;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class Util {
 
     public static List<String> separateString(String str, int delimeter) {
@@ -151,5 +155,19 @@ public class Util {
             result = dir+Constant.FILE.FILENAME_SPECIFICATION;
         }
         return result;
+    }
+
+    public static String convertStringFromJson(String json) {
+        if (json != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(json, String.class);
+            } catch (JsonProcessingException e) {
+                log.error("Ошибка при парсинге json", e);
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

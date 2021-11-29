@@ -212,22 +212,19 @@ function getObj() {
 }
 
 function basketExport(type) {
-    console.log("5basketExport = " + type);
     //json объект в виде массива
     let arr = getObj();
     let jsonObj = {
         "type": type,
         "sensors": arr
     }
-    console.log(jsonObj);
     let json = JSON.stringify(jsonObj);
-    let sendObj = {jsonarr: json};
 
     var model = jsonObj;
     var modelJson = JSON.stringify(model);
     var xhttp = new XMLHttpRequest();
 
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
             let disposition = this.getResponseHeader('content-disposition');

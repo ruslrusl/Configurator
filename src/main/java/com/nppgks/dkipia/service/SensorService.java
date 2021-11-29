@@ -149,4 +149,6 @@ public interface SensorService {
      */
     List<SensorFull> getSensorFullList(String mlfb);
 
+    List<SensorFull> getSensorFullList(List<String> mlfbList);
+
 }

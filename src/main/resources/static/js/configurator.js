@@ -6,7 +6,7 @@ $(document).ready(function () {
             if (!hashArr.includes(curHash)) {
                 //меняем хэш в зависимости от клика
                 let tabName = 'main';
-                if (curHash==tabName) {
+                if (curHash == tabName) {
                     tabName = 'option';
                 }
                 let index = hashArr.indexOf(tabName);
@@ -14,7 +14,7 @@ $(document).ready(function () {
                     hashArr[index] = curHash;
                 }
                 let hashStr = hashArr.join("&");
-                window.location.hash = '#'+hashStr;
+                window.location.hash = '#' + hashStr;
             }
         } else {
             window.location.hash = e.target.hash;
@@ -37,10 +37,10 @@ $(document).ready(function () {
                 window.location.hash = 'main';
             }
         }
-        hashArr.forEach(function(element, i, arr) {
-            if(element.startsWith("spanGroup")) {
+        hashArr.forEach(function (element, i, arr) {
+            if (element.startsWith("spanGroup")) {
                 setTimeout(function () {
-                    $("#"+element).get(0).scrollIntoView();
+                    $("#" + element).get(0).scrollIntoView();
                 }, 1000);
                 return;
             }
@@ -58,7 +58,7 @@ function getFullMlfb(isRus) {
     }
     let spanmlfbb = getSpanMlfbB();
     let spanmlfbc = getSpanMlfbC();
-    let text = mlfb + " "+spanmlfbb+" "+spanmlfbc;
+    let text = mlfb + " " + spanmlfbb + " " + spanmlfbc;
     return text;
 }
 
@@ -72,13 +72,10 @@ function modalApply() {
         if (russtandart.startsWith("КМ35М")) {
             j = 7;
         }
-        let tempMlfb = mlfb.replace("-","");
-        russtandart = russtandart.replace("-","");
-        console.log(j);
-        console.log(russtandart);
-        console.log(tempMlfb);
-        if (tempMlfb.substring(0,j) != russtandart.substring(0,j)) {
-            loginfo("Номер заказа должно начинаться c "+$("#russtandart").text().substring(0,j+1), 4);
+        let tempMlfb = mlfb.replace("-", "");
+        russtandart = russtandart.replace("-", "");
+        if (tempMlfb.substring(0, j) != russtandart.substring(0, j)) {
+            loginfo("Номер заказа должно начинаться c " + $("#russtandart").text().substring(0, j + 1), 4);
         } else {
             submitForm(mlfb, "", "", "", "8", "", 1);
         }
@@ -100,8 +97,8 @@ function getHrefForJump(group) {
     if (!isNumeric(group)) {
         tabName = 'option';
     }
-    let hrefaddr = tabName+"&spanGroup"+group;
-    return "#"+hrefaddr;
+    let hrefaddr = tabName + "&spanGroup" + group;
+    return "#" + hrefaddr;
 }
 
 function getSpanMlfb() {
@@ -113,7 +110,7 @@ function getSpanMlfb() {
 }
 
 function getSpanMlfbRus() {
-    var all = $(".rusmlfbclass").map(function() {
+    var all = $(".rusmlfbclass").map(function () {
         return this.innerHTML;
     }).get();
     return all.join("");
@@ -138,7 +135,7 @@ function getSpanMlfbC() {
     let mlfbText = "";
     for (let i = 1; i <= 40; i++) {
         if ($("#lc" + i).text()) {
-            if (mlfbText!="") {
+            if (mlfbText != "") {
                 mlfbText = mlfbText + " ";
             }
             mlfbText = mlfbText + $("#lc" + i).text().trim();
@@ -155,8 +152,8 @@ function removeGroupOption(group, name) {
     let spanmlfbb = getSpanMlfbB();
     let spanmlfbc = getSpanMlfbC();
     let spanmlfbсText = "";
-    console.log("group = "+group);
-    console.log("name = "+name);
+    console.log("group = " + group);
+    console.log("name = " + name);
     if (isNumeric(group)) {
         let groupBeg = group - 1;
         mlfb = mlfb.slice(0, groupBeg) + "." + mlfb.slice(group);
@@ -170,9 +167,9 @@ function removeGroupOption(group, name) {
             spanmlfbb = arrspanmlfbb.join("+");
             let arrspanmlfbc = spanmlfbc.split("}");
             arrspanmlfbc = arrspanmlfbc.filter(function (item) {
-                return item.indexOf("{"+name) !== 0;
+                return item.indexOf("{" + name) !== 0;
             });
-            spanmlfbc = arrspanmlfbc.filter(i => i!="")
+            spanmlfbc = arrspanmlfbc.filter(i => i != "")
                 .map(i => i + '}').join("");
             name = "0";
         }
@@ -210,29 +207,29 @@ function jumpNextGroup(option, group, isIncrease, element) {
             console.log(element);
             console.log(element.type);
             console.log(element.checked);
-            if (element!==null && element.type=='checkbox' && element.checked==false) {
+            if (element !== null && element.type == 'checkbox' && element.checked == false) {
                 removeGroupOption(group, option)
             } else {
                 let index = arrY.indexOf(option);
                 if (index !== -1) {
-                    if (option == "Y15" || option == "Y16" || option == "Y17" || option == "Y25"|| option == "Y32" || option == "Y99") {
+                    if (option == "Y15" || option == "Y16" || option == "Y17" || option == "Y25" || option == "Y32" || option == "Y99") {
                         spanmlfbсText = $("#" + option + "input").val();
                     } else if (option == "Y21" || option == "Y30") {
                         if ($("#" + option + "select option:selected").text()) {
                             spanmlfbсText = $("#" + option + "select option:selected").text();
-                        } else if ($("#" + option + "input").val()){
+                        } else if ($("#" + option + "input").val()) {
                             spanmlfbсText = $("#" + option + "input").val();
                         }
-                    } else if (option == "Y01" ) {
+                    } else if (option == "Y01") {
                         let t1 = $("#" + option + "number1").val();
                         let t2 = $("#" + option + "number2").val();
-                        if (t1!==null && t2!==null && t1 && t2 && $("#" + option + "select option:selected").text())  {
+                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
                             spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
                         }
-                    } else if (option == "Y02" ) {
+                    } else if (option == "Y02") {
                         let t1 = $("#" + option + "number1").val();
                         let t2 = $("#" + option + "number2").val();
-                        if (t1!==null && t2!==null && t1 && t2 && $("#" + option + "select option:selected").text())  {
+                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
                             spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
                         } else if ($("#" + option + "select option:selected").text()) {
                             spanmlfbсText = $("#" + option + "select option:selected").text();
@@ -241,17 +238,17 @@ function jumpNextGroup(option, group, isIncrease, element) {
                         let t1 = $("#" + option + "number1").val();
                         let t2 = $("#" + option + "number2").val();
 
-                        if (t1!==null && t2!==null && t1 && t2 && $("#" + option + "input").val())  {
+                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "input").val()) {
                             spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "input").val();
-                        } else if (t1!==null && t2!==null && t1 && t2 && $("#" + option + "select option:selected").text())  {
+                        } else if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
                             spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
                         }
-                    } else if (option == "Y26" || option == "Y31"|| option == "Y38") {
+                    } else if (option == "Y26" || option == "Y31" || option == "Y38") {
                         if ($("#" + option + "select option:selected")) {
                             spanmlfbсText = $("#" + option + "select option:selected").text();
                         }
                     }
-                    if (spanmlfbсText!==null && spanmlfbсText) {
+                    if (spanmlfbсText !== null && spanmlfbсText) {
                         spanmlfbсText = option + ": " + spanmlfbсText;
                     } else {
                         isSubmit = "Введите дополнительные данные для опции " + option;
@@ -271,7 +268,7 @@ function jumpNextGroup(option, group, isIncrease, element) {
 
 function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
 
-    console.log("mlfb = ["+mlfb+"], mlfbb= ["+mlfbb+"], mlfbс= ["+mlfbс+"], mlfbсText= ["+mlfbсText+"], group= ["+group+"], option= ["+option+"] ")
+    console.log("mlfb = [" + mlfb + "], mlfbb= [" + mlfbb + "], mlfbс= [" + mlfbс + "], mlfbсText= [" + mlfbсText + "], group= [" + group + "], option= [" + option + "] ")
 
     $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
     $("#mlfbForm").append('<input type="hidden" name="mlfbB" value= "' + mlfbb + '"/> ');
@@ -286,5 +283,21 @@ function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
 
 function addToBasket() {
     let mlfb = getFullMlfb(1);
-    loginfo("Заказ "+mlfb+" добавлен в корзину", 1);
+
+    let jsonObj = {
+        "mlfb": mlfb
+    };
+    let json = JSON.stringify(mlfb);
+
+
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            loginfo("Заказ " + mlfb + " добавлен в корзину", 1);
+        }
+    };
+    xhttp.open("POST", "/addtobasket", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(json);
+
 }

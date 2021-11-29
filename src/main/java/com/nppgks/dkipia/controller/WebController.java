@@ -1,15 +1,18 @@
 package com.nppgks.dkipia.controller;
 
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.service.DataService;
 import com.nppgks.dkipia.service.SensorService;
 import com.nppgks.dkipia.util.Constant;
 import com.nppgks.dkipia.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -18,6 +21,9 @@ public class WebController {
 
     @Autowired
     private SensorService sensorService;
+
+    @Autowired
+    private DataService dataService;
 
     @GetMapping("/")
     public String goToConfigurator() {
@@ -32,18 +38,29 @@ public class WebController {
     }
 
     @GetMapping("/basket")
-    public String getBasket(Model model) {
-        String mlfbTest = "КМ35М-0300-1QB01-5BF0-Z D42+E24+Y01+Y15 {Y01: 0 ... 10 bar}{Y15: PT1}";
+    public String getBasket(Model model, HttpServletRequest request) {
+//        String mlfbTest = "КМ35М-0300-1QB01-5BF0-Z D42+E24+Y01+Y15 {Y01: 0 ... 10 bar}{Y15: PT1}";
         log.info("Basket GetMapping");
-        //TODO все заказы из корзины
+        List<String> mlfbList =  dataService.getDataList(request.getSession().getId());
+        System.out.println(mlfbList);
+        List<SensorFull> sensorFullList = sensorService.getSensorFullList(mlfbList);
+
+        //Список комплектующих
         List<Complete> completeList = sensorService.getComplete(true);
-        List<SensorFull> sensorFullList = sensorService.getSensorFullList(mlfbTest);
 
         model.addAttribute("comletes",completeList);
         model.addAttribute("sensorfull",sensorFullList);
         return "basket";
     }
 
+
+    @PostMapping("/addtobasket")
+    public ResponseEntity<String> addtobasket(@RequestBody String payload, HttpServletRequest request) {
+        String mlfb = Util.convertStringFromJson(payload);
+        log.info("mlfb = " + mlfb);
+        dataService.insertData(request.getSession().getId(), mlfb);
+        return ResponseEntity.ok("ok");
+    }
 
     @GetMapping("/configurator/{id}")
     public String getConfigurator(@PathVariable int id, Model model) {

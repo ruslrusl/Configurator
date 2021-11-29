@@ -203,7 +203,18 @@ public class SensorServiceImpl implements SensorService {
         SensorFull sensorFull = sensorDAO.getSensorFull(mlfb);
         List<SensorFull> list = new ArrayList<>();
         list.add(sensorFull);
-        list.add(sensorFull);
+        return list;
+    }
+
+    @Override
+    public List<SensorFull> getSensorFullList(List<String> mlfbList) {
+        List<SensorFull> list = new ArrayList<>();
+        if (mlfbList!=null) {
+            for (String mlfb : mlfbList) {
+                SensorFull sensorFull = sensorDAO.getSensorFull(mlfb);
+                list.add(sensorFull);
+            }
+        }
         return list;
     }
 
