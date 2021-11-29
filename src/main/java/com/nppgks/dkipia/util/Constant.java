@@ -53,6 +53,7 @@ public interface Constant {
         String TEST_DIRECTORY_TEMPLATE = "C:\\java\\IdeaProjects\\Configurator\\templates\\";
 
         String FILENAME_SPECIFICATION = "Закупочная спецификация 2.0.xlsx";
+        String FILENAME_TKP = "шаблон ТКП.xlsx";
 
         String EXTENSION = ".xlsx";
         String EXPORT_FILE_MLFB = "code";
@@ -60,5 +61,11 @@ public interface Constant {
         String EXPORT_FILE_TKP = "tkp";
         String EXPORT_FILE_MLFB_INDUSTRY = "mlfb";
         String EXPORT_FILE_SPECIFICATION = "specification";
+
+        int EXPORT_TYPE_MLFB = 1;
+        int EXPORT_TYPE_MLFB_DESC = 2;
+        int EXPORT_TYPE_TKP = 3;
+        int EXPORT_TYPE_MLFB_INDUSTRY = 4;
+        int EXPORT_TYPE_SPECIFICATION = 5;
     }
 }

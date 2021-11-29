@@ -142,9 +142,14 @@ public class Util {
         return result;
     }
 
-    public static String getFileNameSpecification() {
+    public static String getFileNameFromTemplate(int type) {
         String dir = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY_TEMPLATE : Constant.FILE.DIRECTORY_TEMPLATE;
-        String result = dir+Constant.FILE.FILENAME_SPECIFICATION;
+        String result = "";
+        if (type==Constant.FILE.EXPORT_TYPE_TKP) {
+            result = dir+Constant.FILE.FILENAME_TKP;
+        } else if (type==Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
+            result = dir+Constant.FILE.FILENAME_SPECIFICATION;
+        }
         return result;
     }
 }
