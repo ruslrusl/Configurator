@@ -39,26 +39,31 @@ public class WebController {
 
     @GetMapping("/basket")
     public String getBasket(Model model, HttpServletRequest request) {
-//        String mlfbTest = "КМ35М-0300-1QB01-5BF0-Z D42+E24+Y01+Y15 {Y01: 0 ... 10 bar}{Y15: PT1}";
         log.info("Basket GetMapping");
-        List<String> mlfbList =  dataService.getDataList(request.getSession().getId());
-        System.out.println(mlfbList);
+        List<String> mlfbList = dataService.getDataList(request.getSession().getId());
         List<SensorFull> sensorFullList = sensorService.getSensorFullList(mlfbList);
 
         //Список комплектующих
         List<Complete> completeList = sensorService.getComplete(true);
 
-        model.addAttribute("comletes",completeList);
-        model.addAttribute("sensorfull",sensorFullList);
+        model.addAttribute("comletes", completeList);
+        model.addAttribute("sensorfull", sensorFullList);
         return "basket";
     }
-
 
     @PostMapping("/addtobasket")
     public ResponseEntity<String> addtobasket(@RequestBody String payload, HttpServletRequest request) {
         String mlfb = Util.convertStringFromJson(payload);
         log.info("mlfb = " + mlfb);
         dataService.insertData(request.getSession().getId(), mlfb);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/removefrombasket")
+    public ResponseEntity<String> removefrombasket(@RequestBody String payload, HttpServletRequest request) {
+        String mlfb = Util.convertStringFromJson(payload);
+        log.info("mlfb = " + mlfb);
+        dataService.removeData(request.getSession().getId(), mlfb);
         return ResponseEntity.ok("ok");
     }
 
@@ -103,9 +108,9 @@ public class WebController {
         //выбираем только необходимую опции у label, а не все параметры
         sensorService.setActiveLabelByPosition(sensorsLabels, group);
 
-        if (isformat==1) {
+        if (isformat == 1) {
             List<String> separateList = sensorService.getSeparateMlfb(mlfb);
-            if (separateList!=null) {
+            if (separateList != null) {
                 mlfb = separateList.get(0);
                 mlfbB = separateList.get(1);
                 mlfbC = separateList.get(2);

@@ -161,7 +161,9 @@ public class Util {
         if (json != null) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                return mapper.readValue(json, String.class);
+                String str =  mapper.readValue(json, String.class);
+                str = str.trim();
+                return str;
             } catch (JsonProcessingException e) {
                 log.error("Ошибка при парсинге json", e);
                 return null;

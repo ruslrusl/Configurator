@@ -18,4 +18,12 @@ public interface DataService {
      * @return
      */
     public List<String> getDataList(String id);
+
+    /**
+     * Удаление данных
+     *
+     * @param id
+     * @param mlfb
+     */
+    public void removeData(String id, String mlfb);
 }

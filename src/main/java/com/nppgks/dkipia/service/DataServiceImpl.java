@@ -32,4 +32,12 @@ public class DataServiceImpl implements DataService {
             return new ArrayList<>();
         }
     }
+
+    @Override
+    public void removeData(String id, String mlfb) {
+        List<String> listData = getDataList(id);
+        if (listData != null) {
+            listData.remove(mlfb);
+        }
+    }
 }
