@@ -31,29 +31,33 @@ public class FileController {
     @RequestMapping("/getfile")
     public ResponseEntity<Resource> getFile(@RequestBody String payload) throws IOException {
         Jobject jobject = excelService.convertFromJson(payload);
-        String fileName = excelService.generateFile(jobject);
-        log.info("payload = " + payload);
-        log.info("fileName = " + fileName);
-        if (fileName != null) {
-            File file = new File(fileName);
-            HttpHeaders header = new HttpHeaders();
-            header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
-            header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            header.add("Pragma", "no-cache");
-            header.add("Expires", "0");
+        if (jobject != null) {
+            String fileName = excelService.generateFile(jobject.getSensors(), jobject.getType() != null ? jobject.getType().get(0) : 1);
+            log.info("payload = " + payload);
+            log.info("fileName = " + fileName);
+            if (fileName != null) {
+                File file = new File(fileName);
+                HttpHeaders header = new HttpHeaders();
+                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+                header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+                header.add("Pragma", "no-cache");
+                header.add("Expires", "0");
 
-            Path path = Paths.get(file.getAbsolutePath());
-            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+                Path path = Paths.get(file.getAbsolutePath());
+                ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
-            file.deleteOnExit();
+                file.deleteOnExit();
 
-            return ResponseEntity.ok()
-                    .headers(header)
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                    .body(resource);
+                return ResponseEntity.ok()
+                        .headers(header)
+                        .contentLength(file.length())
+                        .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                        .body(resource);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
         }
     }
 }

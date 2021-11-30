@@ -215,43 +215,48 @@ function getObj() {
 function basketExport(type) {
     //json объект в виде массива
     let arr = getObj();
+    let typearr = [];
+    typearr.push(type);
     let jsonObj = {
-        "type": type,
+        "type": typearr,
         "sensors": arr
     }
-    let json = JSON.stringify(jsonObj);
-
-    var model = jsonObj;
-    var modelJson = JSON.stringify(model);
+    var json = JSON.stringify(jsonObj);
     var xhttp = new XMLHttpRequest();
 
+    $("#loading").show();
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                $("#loading").hide();
+                let disposition = this.getResponseHeader('content-disposition');
+                let filename = "";
 
-            let disposition = this.getResponseHeader('content-disposition');
-            let filename = "";
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=]*=((['"]).*?2|[^;]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                } else {
+                    filename = 'mlfb.xlsx'
+                }
 
-            if (disposition && disposition.indexOf('attachment') !== -1) {
-                var filenameRegex = /filename[^;=]*=((['"]).*?2|[^;]*)/;
-                var matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                let downloadUrl = URL.createObjectURL(xhttp.response);
+                let a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                a.href = downloadUrl;
+                a.download = filename;
+                a.click();
             } else {
-                filename = 'mlfb.xlsx'
+                $("#loading").hide();
+                loginfo("Ошибка при экспорте. Код ошибки: " + this.status);
             }
-
-            let downloadUrl = URL.createObjectURL(xhttp.response);
-            let a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            a.href = downloadUrl;
-            a.download = filename;
-            a.click();
         }
     };
     xhttp.open("POST", "/getfile", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.responseType = "blob";
-    xhttp.send(modelJson);
+    xhttp.send(json);
 }
 
 function removeSensor(id) {
@@ -267,5 +272,57 @@ function removeSensor(id) {
     xhttp.open("POST", "/removefrombasket", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(json);
+}
 
+function sendEmail() {
+    //json объект в виде массива
+    let sendto = $("#sendto").val();
+    let arrType = [];
+    if (sendto) {
+        if (validateEmail(sendto)) {
+            for (let i = 1; i <= 5; i++) {
+                if ($("#checkboxExport" + i).is(':checked')) {
+                    arrType.push(i);
+                }
+            }
+            if (arrType.length == 0) {
+                loginfo("Не выбраны файлы для отправки", 4);
+            } else {
+                $("#loading").show();
+                let arr = getObj();
+                let jsonObj = {
+                    "type": arrType,
+                    "sensors": arr,
+                    "sendto": sendto
+                }
+                var json = JSON.stringify(jsonObj);
+                var xhttp = new XMLHttpRequest();
+
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        $("#loading").hide();
+                        if (this.status == 200) {
+                            loginfo("Сообщение отправлено.", 1);
+                        } else {
+                            loginfo("Ошибка при отправке. Код ошибки: " + this.status, 4);
+                        }
+                    }
+                };
+                xhttp.open("POST", "/sendmail", true);
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.responseType = "blob";
+                xhttp.send(json);
+                $("#openSendEmail").modal('hide');
+            }
+        } else {
+            loginfo("Не правильно введен email", 3);
+        }
+    } else {
+        loginfo("Не заполнен адресат", 4);
+    }
+}
+
+function validateEmail(email) {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
 }

@@ -37,8 +37,10 @@
             <a class="dropdown-item" onclick="basketExport(5)" href="#" th:text="#{btn.basket.export.specification}"/>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" th:text="#{btn.basket.setting}"></button>
-    <button type="button" class="btn btn-primary" th:text="#{btn.basket.send}"></button>
+    <!--    <button type="button" class="btn btn-primary" th:text="#{btn.basket.setting}"></button>-->
+    <!--    <button type="button" class="btn btn-primary" th:text="#{btn.basket.send}"></button>-->
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#openSendEmail" th:text="#{btn.basket.send}"></button>
 
     <table class="table table-hover table-bordered">
         <thead>
@@ -92,8 +94,64 @@
             </tr>
         </th:block>
         </tbody>
-
     </table>
 </div>
+
+<!-- Modal-->
+<div class="modal fade" id="openSendEmail" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle" th:text="#{basket.sendemail}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <span th:text="#{basket.sendto}"></span>
+                    <input type="email" id="sendto" style="width: 80%;"/>
+                    <br/>
+                    <fieldset>
+                        <span th:text="#{basket.sendfile}"></span>
+                        <div>
+                            <input type="checkbox" id="checkboxExport1" name="checkboxExport1">
+                            <label for="checkboxExport1" th:text="#{btn.basket.export.mlfb}"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="checkboxExport2" name="checkboxExport2">
+                            <label for="checkboxExport2" th:text="#{btn.basket.export.mlfbdescr}"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="checkboxExport3" name="checkboxExport3">
+                            <label for="checkboxExport3" th:text="#{btn.basket.export.tkp}"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="checkboxExport4" name="checkboxExport4">
+                            <label for="checkboxExport4" th:text="#{btn.basket.export.mlfbindustry}"></label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="checkboxExport5" name="checkboxExport5">
+                            <label for="checkboxExport5" th:text="#{btn.basket.export.specification}"></label>
+                        </div>
+                    </fieldset>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        th:text="#{btn.close}"></button>
+                <button type="button" class="btn btn-primary" th:text="#{btn.basket.send}"
+                        onclick="sendEmail()"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="" id="loading">
+    <div class="loader">Loading...</div>
+</div>
+
 </body>
 </html>

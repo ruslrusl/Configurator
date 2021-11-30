@@ -37,27 +37,26 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public String generateFile(Jobject jobject) {
-
-        if (jobject != null) {
+    public String generateFile(List<Jsensor> jsensorList, int type) {
+        if (jsensorList != null) {
             String fileName = null;
-            if (jobject.getType() == Constant.FILE.EXPORT_TYPE_MLFB) {
+            if (type == Constant.FILE.EXPORT_TYPE_MLFB) {
                 fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB);
-            } else if (jobject.getType() == Constant.FILE.EXPORT_TYPE_MLFB_DESC) {
+            } else if (type == Constant.FILE.EXPORT_TYPE_MLFB_DESC) {
                 fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_DESC);
-            } else if (jobject.getType() == Constant.FILE.EXPORT_TYPE_TKP) {
+            } else if (type == Constant.FILE.EXPORT_TYPE_TKP) {
                 fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_TKP);
-            } else if (jobject.getType() == Constant.FILE.EXPORT_TYPE_MLFB_INDUSTRY) {
+            } else if (type == Constant.FILE.EXPORT_TYPE_MLFB_INDUSTRY) {
                 fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_INDUSTRY);
-            } else if (jobject.getType() == Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
+            } else if (type == Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
                 fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_SPECIFICATION);
             }
 
             if (fileName != null) {
                 XSSFWorkbook workbook;
                 XSSFSheet sheet;
-                if (jobject.getType() == Constant.FILE.EXPORT_TYPE_SPECIFICATION || jobject.getType() == Constant.FILE.EXPORT_TYPE_TKP) {
-                    String template = Util.getFileNameFromTemplate(jobject.getType());
+                if (type == Constant.FILE.EXPORT_TYPE_SPECIFICATION || type == Constant.FILE.EXPORT_TYPE_TKP) {
+                    String template = Util.getFileNameFromTemplate(type);
                     File source = new File(template);
                     File destination = new File(fileName);
                     try {
@@ -72,7 +71,7 @@ public class ExcelServiceImpl implements ExcelService {
                     workbook = new XSSFWorkbook();
                     sheet = workbook.createSheet();
                 }
-                fillExcel(workbook, sheet, jobject.getSensors(), jobject.getType());
+                fillExcel(workbook, sheet, jsensorList, type);
                 try {
                     FileOutputStream outputStream = new FileOutputStream(fileName);
                     workbook.write(outputStream);

@@ -1,6 +1,9 @@
 package com.nppgks.dkipia.service;
 
 import com.nppgks.dkipia.entity.outside.Jobject;
+import com.nppgks.dkipia.entity.outside.Jsensor;
+
+import java.util.List;
 
 public interface ExcelService {
 
@@ -15,8 +18,9 @@ public interface ExcelService {
     /**
      * Формирование файла
      *
-     * @param jobject источник
+     * @param jsensorList список оборудований
+     * @param type        тип формирования файла
      * @return название файла
      */
-    String generateFile(Jobject jobject);
+    String generateFile(List<Jsensor> jsensorList, int type);
 }

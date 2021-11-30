@@ -68,4 +68,8 @@ public interface Constant {
         int EXPORT_TYPE_MLFB_INDUSTRY = 4;
         int EXPORT_TYPE_SPECIFICATION = 5;
     }
+
+    interface MAIL {
+        String FROM = "configurator@nppgks.com";
+    }
 }

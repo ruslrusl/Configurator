@@ -12,5 +12,9 @@ public class Jobject {
 
     @Getter
     @Setter
-    private int type;
+    private List<Integer> type;
+
+    @Getter
+    @Setter
+    private String sendto;
 }
