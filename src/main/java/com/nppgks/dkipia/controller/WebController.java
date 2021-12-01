@@ -1,5 +1,8 @@
 package com.nppgks.dkipia.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nppgks.dkipia.entity.*;
 import com.nppgks.dkipia.service.DataService;
 import com.nppgks.dkipia.service.SensorService;
@@ -7,6 +10,7 @@ import com.nppgks.dkipia.util.Constant;
 import com.nppgks.dkipia.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +43,7 @@ public class WebController {
 
     @GetMapping("/basket")
     public String getBasket(Model model, HttpServletRequest request) {
-        log.info("Basket GetMapping");
+        log.info("GetMapping getBasket");
         List<String> mlfbList = dataService.getDataList(request.getSession().getId());
         List<SensorFull> sensorFullList = sensorService.getSensorFullList(mlfbList);
 
@@ -49,6 +53,16 @@ public class WebController {
         model.addAttribute("comletes", completeList);
         model.addAttribute("sensorfull", sensorFullList);
         return "basket";
+    }
+
+    @GetMapping("/settings")
+    public String getSettings(Model model) {
+        log.info("GetMapping getSettings");
+        //Список комплектующих
+        List<Complete> completeList = sensorService.getComplete(false);
+        model.addAttribute("comletes", completeList);
+
+        return "settings";
     }
 
     @PostMapping("/addtobasket")
@@ -61,6 +75,7 @@ public class WebController {
 
     @PostMapping("/removefrombasket")
     public ResponseEntity<String> removefrombasket(@RequestBody String payload, HttpServletRequest request) {
+        log.info("PostMapping removefrombasket");
         String mlfb = Util.convertStringFromJson(payload);
         log.info("mlfb = " + mlfb);
         dataService.removeData(request.getSession().getId(), mlfb);
@@ -69,7 +84,7 @@ public class WebController {
 
     @GetMapping("/configurator/{id}")
     public String getConfigurator(@PathVariable int id, Model model) {
-        log.info("GetMapping");
+        log.info("GetMapping getConfigurator");
         Sensors sensor = sensorService.getSensorById(id);
         List<SensorsLabels> sensorsLabels = sensorService.getSensorLabels(id);
         if (id <= 21) {
@@ -93,7 +108,7 @@ public class WebController {
 
     @PostMapping("/configurator/{id}")
     public String getConfigurator(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, Model model) {
-        log.info("PostMapping");
+        log.info("PostMapping getConfigurator");
         log.info("mlfb = " + mlfb);
         log.info("mlfbB = " + mlfbB);
         log.info("mlfbC = " + mlfbC);
@@ -177,6 +192,24 @@ public class WebController {
         log.info("sensorStatus = " + sensorStatus.toString());
         log.info("*******************************");
         return "configuratorlabels";
+    }
+
+    @RequestMapping("/savecomplete")
+    public ResponseEntity<String> sendMailWithAttachment(@RequestBody String payload) throws JsonProcessingException {
+        log.info("RequestMapping sendMailWithAttachment");
+        log.info(payload);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Complete> completeList = mapper.readValue(payload, new TypeReference<List<Complete>>() {
+        });
+        if (completeList!=null) {
+            if (sensorService.saveComplete(completeList)) {
+                return ResponseEntity.ok("ok");
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
     }
 
 }

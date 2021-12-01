@@ -137,7 +137,7 @@ public interface SensorService {
      * Получение описания по конфигурации
      *
      * @param mlfb конфигурация полностью
-     * @return
+     * @return полное описание
      */
     SensorFull getSensorFull(String mlfb);
 
@@ -149,6 +149,30 @@ public interface SensorService {
      */
     List<SensorFull> getSensorFullList(String mlfb);
 
+    /**
+     * Получение спика описания по списку конфигурации
+     *
+     * @param mlfbList список конфигурации полностью
+     * @return список
+     */
     List<SensorFull> getSensorFullList(List<String> mlfbList);
+
+    /**
+     * Конвертация из json  в объект
+     *
+     * @param tClass класс объекта
+     * @param json   Строка
+     * @param <T>    объект
+     * @return список объекта
+     */
+    public <T> List<T> convertFromJsonToObject(Class<T> tClass, String json);
+
+    /**
+     * Сохранение комплектующих
+     *
+     * @param completeList список комплектующих
+     * @return результат
+     */
+    boolean saveComplete(List<Complete> completeList);
 
 }

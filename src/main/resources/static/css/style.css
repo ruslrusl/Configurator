@@ -19,6 +19,15 @@ input[type='number']{
 .basketinput {
     width: 100px;
 }
+
+.numberinput {
+    width: 100px;
+}
+
+.nninput {
+    width: 50px;
+}
+
 #loading {
     position: fixed;
     display: none;

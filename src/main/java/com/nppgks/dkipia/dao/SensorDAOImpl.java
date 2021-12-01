@@ -104,6 +104,54 @@ public class SensorDAOImpl implements SensorDAO {
         }
     }
 
+    @Override
+    public boolean saveComplete(List<List<?>> list) {
+        Object[] inParamArr = new Object[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            inParamArr[i] = list.get(i);
+        }
+        return callFunctionForUpdate(Boolean.class, "configurator$saveorupdatecomplete(?,?,?,?,?,?,?,?)", inParamArr);
+    }
+
+    private <T> boolean callFunctionForUpdate(Class<T> tClass, String procedureName, Object[] inParamArr) {
+        int j = 2;
+        boolean result = false;
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
+            conn.setAutoCommit(true);
+            CallableStatement proc = conn.prepareCall("{? = call " + procedureName + " }");
+            if (inParamArr != null) {
+                for (int i = 0; i < inParamArr.length; i++) {
+                    if (inParamArr[i] instanceof String) {
+                        proc.setString(j, (String) inParamArr[i]);
+                        j++;
+                    } else if (inParamArr[i] instanceof Integer) {
+                        proc.setInt(j, (Integer) inParamArr[i]);
+                        j++;
+                    } else if (inParamArr[i] instanceof List) {
+                        List inParamlist = (List) inParamArr[i];
+                        String arrType = "text";
+                        if (inParamlist.get(0) instanceof Integer) {
+                            arrType = "integer";
+                        } else if (inParamlist.get(0) instanceof Double) {
+                            arrType = "numeric";
+                        }
+                        final java.sql.Array sqlArray = conn.createArrayOf(arrType, ((List) inParamArr[i]).toArray());
+                        proc.setArray(j, sqlArray);
+                        j++;
+                    }
+                }
+            }
+            proc.registerOutParameter(1, Types.BOOLEAN);
+            proc.execute();
+            result = (Boolean) proc.getObject(1);
+            proc.close();
+        } catch (SQLException ex) {
+            log.error("Ошибка при выполнении функции " + procedureName, ex);
+        }
+        return result;
+    }
+
+
     private <T> List<T> callFunction(Class<T> tClass, String procedureName, Object[] inParamArr) {
         List<T> list = new ArrayList<>();
         int j = 2;
@@ -117,6 +165,16 @@ public class SensorDAOImpl implements SensorDAO {
                         j++;
                     } else if (inParamArr[i] instanceof Integer) {
                         proc.setInt(j, (Integer) inParamArr[i]);
+                        j++;
+                    } else if (inParamArr[i] instanceof List) {
+                        List inParamlist = (List) inParamArr[i];
+                        String arrType = "text";
+                        if (inParamlist.get(0) instanceof Integer) {
+                            arrType = "integer";
+                        }
+                        final java.sql.Array sqlArray = conn.createArrayOf(arrType, ((List) inParamArr[i]).toArray());
+                        System.out.println(sqlArray.toString());
+                        proc.setArray(j, sqlArray);
                         j++;
                     }
                 }
@@ -166,6 +224,9 @@ public class SensorDAOImpl implements SensorDAO {
                 } else if (tClass.isAssignableFrom(String.class)) {
                     String result = results.getString(1);
                     list.add(tClass.cast(result));
+                } else if (tClass.isAssignableFrom(Boolean.class)) {
+                    Boolean result = results.getBoolean(1);
+                    list.add(tClass.cast(result));
                 } else if (tClass.isAssignableFrom(Complete.class)) {
                     Complete complete = new Complete();
                     complete.setId(results.getInt(1));
@@ -198,7 +259,7 @@ public class SensorDAOImpl implements SensorDAO {
 
     private static String getFormattedDouble(Double d) {
         final DecimalFormat df = new DecimalFormat("0.00");
-        return df.format(d).replace(",",".");
+        return df.format(d).replace(",", ".");
     }
 
 }

@@ -1,9 +1,13 @@
 package com.nppgks.dkipia.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nppgks.dkipia.dao.SensorDAO;
 import com.nppgks.dkipia.entity.*;
 import com.nppgks.dkipia.util.Constant;
 import com.nppgks.dkipia.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SensorServiceImpl implements SensorService {
 
@@ -61,20 +66,19 @@ public class SensorServiceImpl implements SensorService {
     public void setSelectedPositionsByMlfb(List<SensorsLabels> sensorsLabels, String mlfb) {
 
         List<SensorsOptionNames> sensorsOptionNamesList = sensorDAO.getSensorOptionsByMlfb(mlfb);
-        sensorsOptionNamesList.stream().forEach(o ->
-        {
-            sensorsLabels.stream()
-                    .filter(s -> s.getPosition().equals(o.getGroup()))
-                    .forEach(s -> {
-                        s.setCurrentOptionSelect(o);
-                        s.setSelectType(Constant.STATUS.OK);
-                        if (s.getSensorsOptionNames() != null)
-                            s.getSensorsOptionNames().stream()
-                                    .filter(on -> on.getId() == o.getId())
-                                    .forEach(on -> on.setSelected(true));
-                    });
-        });
-        sensorsLabels.stream().forEach(s -> s.getSensorsOptionNames());
+        sensorsOptionNamesList.forEach(o ->
+                sensorsLabels.stream()
+                        .filter(s -> s.getPosition().equals(o.getGroup()))
+                        .forEach(s -> {
+                            s.setCurrentOptionSelect(o);
+                            s.setSelectType(Constant.STATUS.OK);
+                            if (s.getSensorsOptionNames() != null)
+                                s.getSensorsOptionNames().stream()
+                                        .filter(on -> on.getId() == o.getId())
+                                        .forEach(on -> on.setSelected(true));
+                        })
+        );
+        sensorsLabels.forEach(SensorsLabels::getSensorsOptionNames);
     }
 
 
@@ -82,21 +86,18 @@ public class SensorServiceImpl implements SensorService {
     public void setSelectedPositionsByMlfbB(List<SensorsLabels> sensorsLabels, int idSensor, String mlfbB) {
 
         List<SensorsOptionNames> sensorsOptionNamesList = sensorDAO.getSensorOptionsByMlfbB(idSensor, mlfbB);
-        sensorsOptionNamesList.stream().forEach(o ->
-        {
-            sensorsLabels.stream()
-                    .filter(s -> s.getPosition().equals(o.getGroup()))
-                    .forEach(s -> {
-                        s.setCurrentOptionSelect(o);
-                        s.setSelectType(Constant.STATUS.OK);
-                        if (s.getSensorsOptionNames() != null)
-                            s.getSensorsOptionNames().stream()
-                                    .filter(on -> on.getId() == o.getId())
-                                    .forEach(on -> on.setSelected(true));
-                    });
-        });
-        sensorsLabels.stream()
-                .forEach(s -> s.getSensorsOptionNames());
+        sensorsOptionNamesList.forEach(o ->
+                sensorsLabels.stream()
+                        .filter(s -> s.getPosition().equals(o.getGroup()))
+                        .forEach(s -> {
+                            s.setCurrentOptionSelect(o);
+                            s.setSelectType(Constant.STATUS.OK);
+                            if (s.getSensorsOptionNames() != null)
+                                s.getSensorsOptionNames().stream()
+                                        .filter(on -> on.getId() == o.getId())
+                                        .forEach(on -> on.setSelected(true));
+                        }));
+        sensorsLabels.forEach(SensorsLabels::getSensorsOptionNames);
     }
 
     @Override
@@ -133,7 +134,7 @@ public class SensorServiceImpl implements SensorService {
                             .filter(o -> o.getSensorsOptionNames() != null)
                             .filter(o -> o.getEltype() == Constant.SENSOR.ELEMENT_RADIO)
                             .forEach(
-                                    o -> o.getSensorsOptionNames().stream().forEach(opt ->
+                                    o -> o.getSensorsOptionNames().forEach(opt ->
                                             {
                                                 listMlfbb.remove(opt.getOption());
                                                 listMlfbс.removeIf(c -> c.startsWith(opt.getOption()));
@@ -186,8 +187,7 @@ public class SensorServiceImpl implements SensorService {
     public List<Complete> getComplete(boolean isused) {
         List<Complete> list = sensorDAO.getComplete();
         if (isused) {
-            List<Complete> listComplete = list.stream().filter(s->s.getIsused()==1).collect(Collectors.toList());
-            return listComplete;
+            return list.stream().filter(s -> s.getIsused() == 1).collect(Collectors.toList());
         } else {
             return list;
         }
@@ -209,7 +209,7 @@ public class SensorServiceImpl implements SensorService {
     @Override
     public List<SensorFull> getSensorFullList(List<String> mlfbList) {
         List<SensorFull> list = new ArrayList<>();
-        if (mlfbList!=null) {
+        if (mlfbList != null) {
             for (String mlfb : mlfbList) {
                 SensorFull sensorFull = sensorDAO.getSensorFull(mlfb);
                 list.add(sensorFull);
@@ -234,6 +234,36 @@ public class SensorServiceImpl implements SensorService {
         sensor.setMlfbC(mlfbC);
     }
 
+    @Override
+    public <T> List<T> convertFromJsonToObject(Class<T> tClass, String json) {
+        if (json != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.readValue(json, new TypeReference<List<T>>() {
+                });
+            } catch (JsonProcessingException e) {
+                log.error("Ошибка при парсинге", e);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean saveComplete(List<Complete> completeList) {
+
+        List<List<? extends Object>> list = new ArrayList<>();
+        list.add(completeList.stream().map(Complete::getId).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getName).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getPrice).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getCoef).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getOrdernumb).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getDescr).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getProvider).collect(Collectors.toList()));
+        list.add(completeList.stream().map(Complete::getUnit).collect(Collectors.toList()));
+        return sensorDAO.saveComplete(list);
+    }
 
 
 }

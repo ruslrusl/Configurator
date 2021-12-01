@@ -1,3 +1,4 @@
+import com.nppgks.dkipia.entity.Complete;
 import com.nppgks.dkipia.entity.Sensors;
 import com.nppgks.dkipia.entity.SensorsLabels;
 import com.nppgks.dkipia.service.SensorService;
@@ -20,6 +21,18 @@ public class MyTestClass {
 
 
     public static void main(String[] args) {
+
+        List<Complete> completeList = new ArrayList<>();
+        Complete comp = new Complete();
+        comp.setId(1);
+        completeList.add(comp);
+        Complete comp2 = new Complete();
+        comp2.setId(2);
+        completeList.add(comp2);
+
+
+        List<Integer> ids = completeList.stream().map(Complete::getId).collect(Collectors.toList());
+        System.out.println(ids);
 
 //        System.out.println(Util.getMlfbB("asf", "ZA1", "A02"));
 
@@ -47,6 +60,7 @@ public class MyTestClass {
 //        String str = list.stream().map(o-> o = Constant.MLFB.DELIMETER_OPEN_BRACKET+o+Constant.MLFB.DELIMETER_CLOSE_BRACKET)
 //                            .collect(Collectors.joining(Constant.MLFB.DELIMETER_EMPTY));
 //        System.out.println(result);
+
 
     }
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="common/header :: common-header"></div>
+    <script th:src="@{/js/settings.js}"></script>
+    <title th:text="#{title.settings}"></title>
+</head>
+<body>
+<div th:replace="common/navigation::common-nav"/>
+
+<div class="container-fluid">
+
+    <table id="compTable" class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th style="display: none;"></th>
+            <th></th>
+            <th scope="col" th:text="#{tbl.settings.name}"></th>
+            <th scope="col" th:text="#{tbl.settings.descr}"></th>
+            <th scope="col" th:text="#{tbl.settings.price}"></th>
+            <th scope="col" th:text="#{tbl.settings.coef}"></th>
+            <th scope="col" th:text="#{tbl.settings.provider}"></th>
+            <th scope="col" th:text="#{tbl.settings.unit}"></th>
+            <th scope="col" th:text="#{tbl.settings.ordernumb}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="complete : ${comletes}">
+            <tr th:id="'comprow'+${completeStat.index+1}">
+                <td th:id="'compid'+${completeStat.index+1}" style="display: none;" th:text="${complete.getId()}"></td>
+                <td>
+                    <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.delete}"
+                            th:onclick="'compdelete('+${completeStat.index+1}+')'"></button>
+                </td>
+                <td><input th:id="'compname'+${completeStat.index+1}" th:value="${complete.getName()}"></input></td>
+                <td><textarea th:id="'compdescr'+${completeStat.index+1}" th:text="${complete.getDescr()}"></textarea>
+                </td>
+                <td><input th:id="'compprice'+${completeStat.index+1}" th:value="${complete.getPrice()}"
+                           class="numberinput"/></td>
+                <td><input th:id="'compcoef'+${completeStat.index+1}" th:value="${complete.getCoef()}"
+                           class="numberinput"/></td>
+                <td><textarea th:id="'compprovider'+${completeStat.index+1}"
+                              th:text="${complete.getProvider()}"></textarea></td>
+                <td><input th:id="'compunit'+${completeStat.index+1}" th:value="${complete.getUnit()}"
+                           class="numberinput"/></td>
+                <td><input th:id="'compordernumb'+${completeStat.index+1}" th:value="${complete.getOrdernumb()}"
+                           class="nninput"/></td>
+            </tr>
+        </th:block>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="8">
+                <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.basket.additional.add}"
+                        onclick="compadd()"></button>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    <button type="button" class="btn btn-primary" th:text="#{btn.save}" onclick="compsave()"></button>
+    <button type="button" class="btn btn-primary" th:text="#{btn.unsave}" onclick="compunsave()"></button>
+</div>
+
+
+<div style="" id="loading">
+    <div class="loader">Loading...</div>
+</div>
+
+</body>
+</html>

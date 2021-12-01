@@ -97,7 +97,15 @@ public interface SensorDAO {
      * Получение описания по конфигурации
      *
      * @param mlfb конфигурация полностью
-     * @return
+     * @return полное конфигурация
      */
     SensorFull getSensorFull(String mlfb);
+
+    /**
+     * Сохранение комплектующих
+     *
+     * @param list список комплектующих из списка параметров
+     * @return результат
+     */
+    boolean saveComplete(List<List<?>> list);
 }
