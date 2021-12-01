@@ -94,6 +94,12 @@ public class SensorDAOImpl implements SensorDAO {
     }
 
     @Override
+    public List<Price> getPrice(int idSensor) {
+        Object[] inParamArr = {idSensor};
+        return callFunction(Price.class, "configurator$getprice(?)", inParamArr);
+    }
+
+    @Override
     public SensorFull getSensorFull(String mlfb) {
         Object[] inParamArr = {mlfb};
         List<SensorFull> list = callFunction(SensorFull.class, "configurator$getsensordescbymlfb(?)", inParamArr);
@@ -111,6 +117,15 @@ public class SensorDAOImpl implements SensorDAO {
             inParamArr[i] = list.get(i);
         }
         return callFunctionForUpdate(Boolean.class, "configurator$saveorupdatecomplete(?,?,?,?,?,?,?,?)", inParamArr);
+    }
+
+    @Override
+    public boolean savePrice(List<List<?>> list) {
+        Object[] inParamArr = new Object[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            inParamArr[i] = list.get(i);
+        }
+        return callFunctionForUpdate(Boolean.class, "configurator$saveprice(?,?)", inParamArr);
     }
 
     private <T> boolean callFunctionForUpdate(Class<T> tClass, String procedureName, Object[] inParamArr) {
@@ -173,7 +188,6 @@ public class SensorDAOImpl implements SensorDAO {
                             arrType = "integer";
                         }
                         final java.sql.Array sqlArray = conn.createArrayOf(arrType, ((List) inParamArr[i]).toArray());
-                        System.out.println(sqlArray.toString());
                         proc.setArray(j, sqlArray);
                         j++;
                     }
@@ -247,6 +261,14 @@ public class SensorDAOImpl implements SensorDAO {
                     sensorFull.setDescr(results.getString(4));
                     sensorFull.setPrice(getFormattedDouble(results.getDouble(5)));
                     list.add(tClass.cast(sensorFull));
+                } else if (tClass.isAssignableFrom(Price.class)) {
+                    Price price = new Price();
+                    price.setId(results.getInt(1));
+                    price.setName(results.getString(2));
+                    price.setPosition(results.getString(3));
+                    price.setOption(results.getString(4));
+                    price.setPrice(results.getDouble(5));
+                    list.add(tClass.cast(price));
                 }
             }
             results.close();

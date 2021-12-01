@@ -28,6 +28,10 @@ input[type='number']{
     width: 50px;
 }
 
+.settingtdoption {
+    width: 50px;
+}
+
 #loading {
     position: fixed;
     display: none;

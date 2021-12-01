@@ -265,5 +265,18 @@ public class SensorServiceImpl implements SensorService {
         return sensorDAO.saveComplete(list);
     }
 
+    @Override
+    public List<Price> getPrice(int idSensor) {
+        return sensorDAO.getPrice(idSensor);
+    }
+
+    @Override
+    public boolean savePrice(List<Price> priceList) {
+        List<List<? extends Object>> list = new ArrayList<>();
+        list.add(priceList.stream().map(Price::getId).collect(Collectors.toList()));
+        list.add(priceList.stream().map(Price::getPrice).collect(Collectors.toList()));
+        return sensorDAO.savePrice(list);
+    }
+
 
 }

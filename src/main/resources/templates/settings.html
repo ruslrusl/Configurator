@@ -9,56 +9,117 @@
 <div th:replace="common/navigation::common-nav"/>
 
 <div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <!-- Первая вкладка (активная) -->
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#complete" id="licomplete"
+               th:text="#{settings.navbar.comp}"></a>
+        </li>
+        <!-- Вторая вкладка -->
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#price" id="liprice" th:text="#{settings.navbar.price}"></a>
+        </li>
+    </ul>
 
-    <table id="compTable" class="table table-hover table-bordered">
-        <thead>
-        <tr>
-            <th style="display: none;"></th>
-            <th></th>
-            <th scope="col" th:text="#{tbl.settings.name}"></th>
-            <th scope="col" th:text="#{tbl.settings.descr}"></th>
-            <th scope="col" th:text="#{tbl.settings.price}"></th>
-            <th scope="col" th:text="#{tbl.settings.coef}"></th>
-            <th scope="col" th:text="#{tbl.settings.provider}"></th>
-            <th scope="col" th:text="#{tbl.settings.unit}"></th>
-            <th scope="col" th:text="#{tbl.settings.ordernumb}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="complete : ${comletes}">
-            <tr th:id="'comprow'+${completeStat.index+1}">
-                <td th:id="'compid'+${completeStat.index+1}" style="display: none;" th:text="${complete.getId()}"></td>
-                <td>
-                    <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.delete}"
-                            th:onclick="'compdelete('+${completeStat.index+1}+')'"></button>
-                </td>
-                <td><input th:id="'compname'+${completeStat.index+1}" th:value="${complete.getName()}"></input></td>
-                <td><textarea th:id="'compdescr'+${completeStat.index+1}" th:text="${complete.getDescr()}"></textarea>
-                </td>
-                <td><input th:id="'compprice'+${completeStat.index+1}" th:value="${complete.getPrice()}"
-                           class="numberinput"/></td>
-                <td><input th:id="'compcoef'+${completeStat.index+1}" th:value="${complete.getCoef()}"
-                           class="numberinput"/></td>
-                <td><textarea th:id="'compprovider'+${completeStat.index+1}"
-                              th:text="${complete.getProvider()}"></textarea></td>
-                <td><input th:id="'compunit'+${completeStat.index+1}" th:value="${complete.getUnit()}"
-                           class="numberinput"/></td>
-                <td><input th:id="'compordernumb'+${completeStat.index+1}" th:value="${complete.getOrdernumb()}"
-                           class="nninput"/></td>
-            </tr>
-        </th:block>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="8">
-                <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.basket.additional.add}"
-                        onclick="compadd()"></button>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
-    <button type="button" class="btn btn-primary" th:text="#{btn.save}" onclick="compsave()"></button>
-    <button type="button" class="btn btn-primary" th:text="#{btn.unsave}" onclick="compunsave()"></button>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="complete">
+            <table id="compTable" class="table table-hover table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="display: none;"></th>
+                    <th></th>
+                    <th scope="col" th:text="#{tbl.settings.name}"></th>
+                    <th scope="col" th:text="#{tbl.settings.descr}"></th>
+                    <th scope="col" th:text="#{tbl.settings.price}"></th>
+                    <th scope="col" th:text="#{tbl.settings.coef}"></th>
+                    <th scope="col" th:text="#{tbl.settings.provider}"></th>
+                    <th scope="col" th:text="#{tbl.settings.unit}"></th>
+                    <th scope="col" th:text="#{tbl.settings.ordernumb}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="complete : ${comletes}">
+                    <tr th:id="'comprow'+${completeStat.index+1}">
+                        <td th:id="'compid'+${completeStat.index+1}" style="display: none;"
+                            th:text="${complete.getId()}"></td>
+                        <td>
+                            <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.delete}"
+                                    th:onclick="'compdelete('+${completeStat.index+1}+')'"></button>
+                        </td>
+                        <td><input th:id="'compname'+${completeStat.index+1}" th:value="${complete.getName()}"></input>
+                        </td>
+                        <td><textarea th:id="'compdescr'+${completeStat.index+1}"
+                                      th:text="${complete.getDescr()}"></textarea>
+                        </td>
+                        <td><input th:id="'compprice'+${completeStat.index+1}" th:value="${complete.getPrice()}"
+                                   class="numberinput"/></td>
+                        <td><input th:id="'compcoef'+${completeStat.index+1}" th:value="${complete.getCoef()}"
+                                   class="numberinput"/></td>
+                        <td><textarea th:id="'compprovider'+${completeStat.index+1}"
+                                      th:text="${complete.getProvider()}"></textarea></td>
+                        <td><input th:id="'compunit'+${completeStat.index+1}" th:value="${complete.getUnit()}"
+                                   class="numberinput"/></td>
+                        <td><input th:id="'compordernumb'+${completeStat.index+1}" th:value="${complete.getOrdernumb()}"
+                                   class="nninput"/></td>
+                    </tr>
+                </th:block>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="8">
+                        <button type="button" class="btn btn-dark btn-sm" th:text="#{btn.basket.additional.add}"
+                                onclick="compadd()"></button>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+            <button type="button" class="btn btn-primary" th:text="#{btn.save}" onclick="compsave()"></button>
+            <button type="button" class="btn btn-primary" th:text="#{btn.unsave}" onclick="compunsave()"></button>
+            <br/>
+        </div>
+
+        <div class="tab-pane fade" id="price">
+            <div class="form-group col-md-4">
+                <label for="sensors" th:text="#{settings.sensor}"></label>
+                <select id="sensors" name="sensors" class="form-control" onchange="changeSensor(this)">
+                    <option th:each="sensor : ${sensors}"
+                            th:id="${sensor.getId()}"
+                            th:text="${sensor.getName()}"
+                            th:value="${sensor.getId()}"
+                    />
+                </select>
+            </div>
+            <div>
+                <table id="sensorTable" class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th style="display: none;"></th>
+                        <th scope="col" th:text="#{tbl.settings.name}" style="width: 50%;"></th>
+                        <th scope="col" class="settingtdoption">5</th>
+                        <th scope="col" class="settingtdoption">6</th>
+                        <th scope="col" class="settingtdoption">7</th>
+                        <th scope="col" class="settingtdoption">8</th>
+                        <th scope="col" class="settingtdoption">9</th>
+                        <th scope="col" class="settingtdoption">10</th>
+                        <th scope="col" class="settingtdoption">11</th>
+                        <th scope="col" class="settingtdoption">12</th>
+                        <th scope="col" class="settingtdoption">13</th>
+                        <th scope="col" class="settingtdoption">14</th>
+                        <th scope="col" class="settingtdoption">15</th>
+                        <th scope="col" class="settingtdoption">16</th>
+                        <th scope="col" th:text="#{tbl.settings.price}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary" th:text="#{btn.save}" onclick="pricesave()"></button>
+            <button type="button" class="btn btn-primary" th:text="#{btn.unsave}" onclick="priceunsave()"></button>
+            <br/>
+        </div>
+    </div>
 </div>
 
 

@@ -60,7 +60,15 @@ public class WebController {
         log.info("GetMapping getSettings");
         //Список комплектующих
         List<Complete> completeList = sensorService.getComplete(false);
+        List<Sensors> sensors = sensorService.getSensors();
+        List<Price> priceList = null;
+        if (sensors!=null && sensors.size()>0); {
+            priceList = sensorService.getPrice(sensors.get(0).getId());
+        }
+
         model.addAttribute("comletes", completeList);
+        model.addAttribute("sensors", sensors);
+        model.addAttribute("prices", priceList);
 
         return "settings";
     }
@@ -195,14 +203,32 @@ public class WebController {
     }
 
     @RequestMapping("/savecomplete")
-    public ResponseEntity<String> sendMailWithAttachment(@RequestBody String payload) throws JsonProcessingException {
-        log.info("RequestMapping sendMailWithAttachment");
+    public ResponseEntity<String> savecomplete(@RequestBody String payload) throws JsonProcessingException {
+        log.info("RequestMapping savecomplete");
         log.info(payload);
         ObjectMapper mapper = new ObjectMapper();
         List<Complete> completeList = mapper.readValue(payload, new TypeReference<List<Complete>>() {
         });
         if (completeList!=null) {
             if (sensorService.saveComplete(completeList)) {
+                return ResponseEntity.ok("ok");
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        }
+    }
+
+    @RequestMapping("/saveprice")
+    public ResponseEntity<String> saveprice(@RequestBody String payload) throws JsonProcessingException {
+        log.info("RequestMapping saveprice");
+        log.info(payload);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Price> priceList = mapper.readValue(payload, new TypeReference<List<Price>>() {
+        });
+        if (priceList!=null) {
+            if (sensorService.savePrice(priceList)) {
                 return ResponseEntity.ok("ok");
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

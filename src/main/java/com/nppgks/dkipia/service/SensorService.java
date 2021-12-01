@@ -175,4 +175,20 @@ public interface SensorService {
      */
     boolean saveComplete(List<Complete> completeList);
 
+    /**
+     * Получение списка с ценами
+     *
+     * @param idSensor ид датчика
+     * @return список
+     */
+    List<Price> getPrice(int idSensor);
+
+    /**
+     * Сохранение комплектующих
+     *
+     * @param priceList список цен
+     * @return результат
+     */
+    boolean savePrice(List<Price> priceList);
+
 }

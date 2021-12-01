@@ -108,4 +108,20 @@ public interface SensorDAO {
      * @return результат
      */
     boolean saveComplete(List<List<?>> list);
+
+    /**
+     * Получение списка с ценами
+     *
+     * @param idSensor ид датчика
+     * @return список
+     */
+    List<Price> getPrice(int idSensor);
+
+    /**
+     * Сохранение цен
+     *
+     * @param list список комплектующих из списка параметров
+     * @return результат
+     */
+    boolean savePrice(List<List<?>> list);
 }
