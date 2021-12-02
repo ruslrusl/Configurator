@@ -8,15 +8,42 @@ import com.nppgks.dkipia.entity.Sensors;
 import com.nppgks.dkipia.entity.SensorsLabels;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class Util {
+
+    public final static boolean ISTEST;
+
+    static {
+        boolean ISTEST1;
+        try {
+            ISTEST1 = false;
+            Enumeration e = NetworkInterface.getNetworkInterfaces();
+            while(e.hasMoreElements())
+            {
+                NetworkInterface n = (NetworkInterface) e.nextElement();
+                Enumeration ee = n.getInetAddresses();
+                while (ee.hasMoreElements())
+                {
+                    InetAddress i = (InetAddress) ee.nextElement();
+                    if (i.getHostAddress().equalsIgnoreCase("192.168.61.138")) {
+                        ISTEST1 = true;
+                        break;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            ISTEST1 = false;
+        }
+        ISTEST = ISTEST1;
+        System.out.println("Is test machine = "+ISTEST1);
+    }
 
     public static List<String> separateString(String str, int delimeter) {
         List<String> result = new ArrayList<>();
@@ -141,13 +168,13 @@ public class Util {
 
     public static String generateFileNameWithDirectory(String name) {
         DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String dir = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
+        String dir = Util.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
         String result = dir+name+"_"+timeStampPattern.format(java.time.LocalDateTime.now())+Constant.FILE.EXTENSION;
         return result;
     }
 
     public static String getFileNameFromTemplate(int type) {
-        String dir = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY_TEMPLATE : Constant.FILE.DIRECTORY_TEMPLATE;
+        String dir = Util.ISTEST? Constant.FILE.TEST_DIRECTORY_TEMPLATE : Constant.FILE.DIRECTORY_TEMPLATE;
         String result = "";
         if (type==Constant.FILE.EXPORT_TYPE_TKP) {
             result = dir+Constant.FILE.FILENAME_TKP;

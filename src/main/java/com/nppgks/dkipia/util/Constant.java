@@ -2,7 +2,7 @@ package com.nppgks.dkipia.util;
 
 public interface Constant {
 
-    boolean ISTEST = true;
+    //boolean ISTEST = true;
 
     interface DB {
 
