@@ -1,6 +1,7 @@
 package com.nppgks.dkipia;
 
 import com.nppgks.dkipia.util.Constant;
+import com.nppgks.dkipia.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +22,7 @@ public class ConfigurationApp implements CommandLineRunner {
 
     @Override
     public void run(String... arg) throws Exception {
-        String path = Constant.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
+        String path = Util.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
         Arrays.stream(new File(path).listFiles()).forEach(File::delete);
     }
 
