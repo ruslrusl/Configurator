@@ -170,7 +170,7 @@ public class WebController {
         model.addAttribute("sensorsLabels", sensorsLabels);
         model.addAttribute("mlfb", Util.separateString(sensor.getMlfb(), 0));
         model.addAttribute("mlfbRus", Util.separateString(russianMlfb, 0));
-        model.addAttribute("mlfbB", Util.separateString(sensor.getMlfbB(), 1));
+        model.addAttribute("mlfbB", Util.separateString(sensor.getMlfbB(), 4));
         model.addAttribute("mlfbC", Util.separateString(sensor.getMlfbC(), 2));
         model.addAttribute("sensorStatus", sse);
         if (group != null) {

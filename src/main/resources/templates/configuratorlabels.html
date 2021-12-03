@@ -20,9 +20,11 @@
                 <img th:case="3" th:src="@{/css/images/applicable3_NO.gif}"></img>
                 <button th:case="1" type="button" class="btn btn-primary" th:text="#{btn.basket.add}"></button>
             </span>
-            <table style="display: inline-block; vertical-align: middle;" class="h6" th:utext="${sensorStatus.getMessage()}">
+            <table style="display: inline-block; vertical-align: middle;" class="h6"
+                   th:utext="${sensorStatus.getMessage()}">
             </table>
-            <button th:if="${sensorStatus.getStatus()}==1" type="button" class="btn btn-primary" th:text="#{btn.basket.add}" onclick="addToBasket()"></button>
+            <button th:if="${sensorStatus.getStatus()}==1" type="button" class="btn btn-primary"
+                    th:text="#{btn.basket.add}" onclick="addToBasket()"></button>
         </span>
         <span th:unless="${sensorStatus!=null}">
             <img th:src="@{/css/images/applicable3_BE.gif}"></img>
@@ -275,79 +277,84 @@
                 </table>
             </div>
         </div>
-
-
     </div>
     <br/>
-
-
     <div>
-        <table>
-            <tr>
-                <td>
-                    <span class="mr-5 font-weight-bold" th:text="#{configurator.order}"></span>
-                </td>
-                <td>
-                    <span th:each="item, iState: ${mlfbRus}">
-                        <span class="rusmlfbclass" th:if="${iState.index < (sensor.getId()<=21?11:9)}"
-                              th:id="'lconstant' + (${iState.index + 1})"
-                              th:text="${item}"></span>
-                        <span th:unless="${iState.index < (sensor.getId()<=21?11:9)}">
-                            <a th:id="'lmmm' + (${iState.index - 3})"
-                               onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">
-                            <span th:text="${item}" class="cursorpointer rusmlfbclass">.</span>
-                            </a>
-                        </span>
-                    </span>
+        <!--        Название-->
+        <span class="mr-5 font-weight-bold" th:text="#{configurator.order}"></span>
+        <!--        На русском-->
+        <div class="d-inline ml-2">
 
-                    <span th:each="item, iState: ${mlfb}" style="display: none;">
-                        <span th:if="${iState.index < (sensor.getId()<=21?7:5)}" th:id="'lm' + (${iState.index + 1})"
-                              th:text="${item}"></span>
-                        <span th:unless="${iState.index < (sensor.getId()<=21?7:5)}">
-                            <a th:id="'lm' + (${iState.index + 1})"
-                               onclick="jumpNextGroup(0,this.id.substring(2), 0, this);">
-                            <span th:text="${item}" class="cursorpointer">.</span>
-                            </a>
-                        </span>
-                    </span>
-                </td>
-                <td rowspan="3">
-                    <button type="button" class="btn btn-outline-dark" data-toggle="modal"
-                            data-target="#addMlfbManually" th:text="#{configurator.manually}"></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="mr-5 font-weight-bold" th:text="#{configurator.b}"></span>
-                </td>
-                <td>
-                    <span th:each="item, iState: ${mlfbB}">
-                        <span>
-                            <a th:id="'lb' + (${iState.index + 1})">
-                            <span th:text="${item}"></span>
-                            </a>
-                        </span>
-                        <span th:if="${iState.index + 1} != ${iState.size}">+</span>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="mr-5 font-weight-bold" th:text="#{configurator.c}"></span>
-                </td>
-                <td>
-                    <span th:each="item, iState: ${mlfbC}">
-                        <span>
-                            <a th:id="'lc' + (${iState.index + 1})">
-                            <span th:text="${item}"></span>
-                            </a>
-                        </span>
-                        <span th:if="${iState.index + 1} != ${iState.size}"> </span>
-                    </span>
-                </td>
-            </tr>
-        </table>
+<!--            <span th:each="item, iState: ${mlfbRus}">-->
+<!--                <-->
+<!--                <span class="rusmlfbclass" th:if="${iState.index < (sensor.getId()<=21?11:9)}"-->
+<!--                      th:id="'lconstant' + (${iState.index + 1})"-->
+<!--                      th:text="${item}"></span>-->
+<!--                <span th:unless="${iState.index < (sensor.getId()<=21?11:9)}">-->
+<!--                    <span th:if="${item.equalsIgnoreCase('-')}" th:text="${item}"></span>-->
+<!--                    <a th:unless="${item.equalsIgnoreCase('-')}" th:id="'lmmm' + (${iState.index - 3})" onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">-->
+<!--                        <span th:text="${item}" class="cursorpointer rusmlfbclass">.</span>-->
+<!--                    </a>-->
+<!--                </span>-->
+<!--            </span>-->
+            <th:block th:each="item, iState: ${mlfbRus}">
+                <th:block th:if="${iState.index < 11}">
+                    <span class="rusmlfbclass" th:if="${iState.index < (sensor.getId()<=21?11:9)}"
+                          th:id="'lconstant' + (${iState.index + 1})"th:text="${item}"></span>
+                    <a th:unless="${iState.index < (sensor.getId()<=21?11:9)}" th:id="'lmmm' + (${iState.index - 3})" onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">
+                        <span th:text="${item}" class="cursorpointer rusmlfbclass">.</span>
+                    </a>
+                </th:block>
+                <th:block th:unless="${iState.index < 11}">
+                    <span th:if="${iState.index == 11 ||iState.index == 17|| iState.index >21}" class="rusmlfbclass"
+                          th:id="'lconstant' + (${iState.index + 1})" th:text="${item}"></span>
+                    <th:block th:unless="${iState.index == 11 || iState.index == 17 || iState.index >21}">
+                        <a th:if="${iState.index < 17}" th:id="'lmmm' + (${iState.index - 4})" onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">
+                            <span th:text="${item}" class="cursorpointer rusmlfbclass">.</span>
+                        </a>
+                        <a th:unless="${iState.index < 17}" th:id="'lmmm' + (${iState.index - 5})" onclick="jumpNextGroup(0,this.id.substring(4), 0, this);">
+                            <span th:text="${item}" class="cursorpointer rusmlfbclass">.</span>
+                        </a>
+                    </th:block>
+                </th:block>
+            </th:block>
+
+        <!--        На англ-->
+            <span th:each="item, iState: ${mlfb}" style="display: none;">
+                <span th:if="${iState.index < (sensor.getId()<=21?7:5)}" th:id="'lm' + (${iState.index + 1})"
+                      th:text="${item}"></span>
+                <span th:unless="${iState.index < (sensor.getId()<=21?7:5)}">
+                    <a th:id="'lm' + (${iState.index + 1})" onclick="jumpNextGroup(0,this.id.substring(2), 0, this);">
+                        <span th:text="${item}" class="cursorpointer">.</span>
+                    </a>
+                </span>
+            </span>
+        </div>
+        <!--        В-строка-->
+        <div class="d-inline ml-2">
+            <th:block th:each="item, iState: ${mlfbB}">
+                <span>
+                    <a th:id="'lb' + (${iState.index + 1} )">
+                        <span th:text="${item}"></span>
+                    </a>
+                </span>
+                <span th:if="${iState.index + 1} != ${iState.size}">+</span>
+            </th:block>
+        </div>
+        <!--        С-строка-->
+        <div class="d-inline ml-2">
+            <span th:each="item, iState: ${mlfbC}">
+                <span>
+                    <a th:id="'lc' + (${iState.index + 1})">
+                    <span th:text="${item}"></span>
+                    </a>
+                </span>
+                <span th:if="${iState.index + 1} != ${iState.size}"> </span>
+            </span>
+        </div>
         <br/>
+        <button type="button" class="btn btn-outline-dark" data-toggle="modal"
+                data-target="#addMlfbManually" th:text="#{configurator.manually}"></button>
     </div>
 
     <!-- Modal-->

@@ -64,19 +64,27 @@ function getFullMlfb(isRus) {
 
 function modalApply() {
     let mlfb = $("#modalMlfb").val().trim();
+    console.log("mlfb = "+mlfb);
     if (mlfb.startsWith("7MF")) {
         submitForm(mlfb, "", "", "", "8", "", 1);
     } else {
         let j = 9;
         let russtandart = $("#russtandart").text();
-        if (russtandart.startsWith("КМ35М")) {
+        console.log("0russtandart = "+russtandart);
+        if (russtandart.startsWith("КМ35-М")) {
             j = 7;
         }
-        let tempMlfb = mlfb.replace("-", "");
-        russtandart = russtandart.replace("-", "");
+        let tempMlfb = mlfb.replaceAll("-", "");
+        russtandart = russtandart.replaceAll("-", "");
+
+        console.log("russtandart = "+russtandart);
+        console.log("tempMlfb = "+tempMlfb);
+
+
         if (tempMlfb.substring(0, j) != russtandart.substring(0, j)) {
             loginfo("Номер заказа должно начинаться c " + $("#russtandart").text().substring(0, j + 1), 4);
         } else {
+            console.log("tempMlfbsubmitForm = "+mlfb);
             submitForm(mlfb, "", "", "", "8", "", 1);
         }
     }

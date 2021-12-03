@@ -63,6 +63,12 @@ public class Util {
                 result = Arrays.stream(split)
                         .map(o -> o = o.substring(1))
                         .collect(Collectors.toList());
+            } else if (delimeter == 4) {
+                String[] split = str.split(Constant.MLFB.OPTION_DELIMETER);
+                for (String s: split) {
+                    String[] split2 = s.split(Constant.MLFB.DELIMETER_SPACE);
+                    result.addAll(Arrays.asList(split2));
+                }
             }
         }
         return result;
