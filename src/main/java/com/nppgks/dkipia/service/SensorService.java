@@ -1,6 +1,9 @@
 package com.nppgks.dkipia.service;
 
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.start.SModel;
+import com.nppgks.dkipia.entity.start.Signal;
+import com.nppgks.dkipia.entity.start.Type;
 
 import java.util.List;
 
@@ -190,5 +193,29 @@ public interface SensorService {
      * @return результат
      */
     boolean savePrice(List<Price> priceList);
+
+    /**
+     * Получение типов датчика
+     *
+     * @return список
+     */
+    List<Type> getTypeForStart();
+
+    /**
+     * Получение моделей датчика по типу
+     *
+     * @param idType идентификатор типа
+     * @return список
+     */
+    List<SModel> getModelForStart(int idType);
+
+    /**
+     * Получение сигналов по типу и модели датчика
+     *
+     * @param idType  идентификатор типа
+     * @param idModel идентификатор модели
+     * @return список
+     */
+    List<Signal> getSignalForStart(int idType, int idModel);
 
 }

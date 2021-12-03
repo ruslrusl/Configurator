@@ -1,6 +1,9 @@
 package com.nppgks.dkipia.dao;
 
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.start.SModel;
+import com.nppgks.dkipia.entity.start.Signal;
+import com.nppgks.dkipia.entity.start.Type;
 import com.nppgks.dkipia.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +129,23 @@ public class SensorDAOImpl implements SensorDAO {
             inParamArr[i] = list.get(i);
         }
         return callFunctionForUpdate(Boolean.class, "configurator$saveprice(?,?)", inParamArr);
+    }
+
+    @Override
+    public List<Type> getType() {
+        return callFunction(Type.class, "configurator$getstarttype()", null);
+    }
+
+    @Override
+    public List<SModel> getModel(int idType) {
+        Object[] inParamArr = {idType};
+        return callFunction(SModel.class, "configurator$getstartmodel(?)", inParamArr);
+    }
+
+    @Override
+    public List<Signal> getSignal(int idType, int idModel) {
+        Object[] inParamArr = {idType, idModel};
+        return callFunction(Signal.class, "configurator$getstartsignalwithmlfb(?, ?)", inParamArr);
     }
 
     private <T> boolean callFunctionForUpdate(Class<T> tClass, String procedureName, Object[] inParamArr) {
@@ -269,6 +289,25 @@ public class SensorDAOImpl implements SensorDAO {
                     price.setOption(results.getString(4));
                     price.setPrice(results.getDouble(5));
                     list.add(tClass.cast(price));
+                } else if (tClass.isAssignableFrom(Type.class)) {
+                    Type obj = new Type();
+                    obj.setId(results.getInt(1));
+                    obj.setName(results.getString(2));
+                    obj.setOrdernumb(results.getInt(3));
+                    list.add(tClass.cast(obj));
+                } else if (tClass.isAssignableFrom(SModel.class)) {
+                    SModel obj = new SModel();
+                    obj.setId(results.getInt(1));
+                    obj.setName(results.getString(2));
+                    obj.setOrdernumb(results.getInt(3));
+                    list.add(tClass.cast(obj));
+                } else if (tClass.isAssignableFrom(Signal.class)) {
+                    Signal obj = new Signal();
+                    obj.setId(results.getInt(1));
+                    obj.setName(results.getString(2));
+                    obj.setOrdernumb(results.getInt(3));
+                    obj.setIdSensor(results.getInt(4));
+                    list.add(tClass.cast(obj));
                 }
             }
             results.close();

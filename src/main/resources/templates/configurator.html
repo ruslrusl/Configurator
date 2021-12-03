@@ -2,30 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="common/header :: common-header"></div>
+    <script th:src="@{/js/confstart.js}"></script>
     <title th:text="#{title.conf}"></title>
 </head>
 <body>
 <div th:replace="common/navigation::common-nav"/>
 
 <div class="container-fluid">
-    <span th:text="#{conf.select}"></span>
 
-    <table class="table table-striped w-50" >
-        <tr th:each="item: ${sensors}">
-            <td class="px-0" style="width: 200px;text-align: center;">
-                <a th:href="'/configurator/'+${item.getId()}"><img width="100" height="100"
-                                                                   th:src="@{ ${'/css/images/'+item.getImage()}}"/></a>
-                <br/>
-                <a th:text="${item.getRusmlfbstandart()}" th:href="'/configurator/'+${item.getId()}"></a>
-            </td>
-
+    <table id="tbl">
+        <tr id="rowtype">
             <td>
-                <a th:text="${item.getRusname()}" th:href="'/configurator/'+${item.getId()}" class="font-weight-bold"></a>
-                <br/>
-                <span th:text="${item.getDescr()}"/>
+                <span th:text="#{conf.select.sensor}"></span>
+            </td>
+            <td>
+                <select class="selectpicker" title="Выберите из списка..." id="sensorsType" name="sensorsType" onchange="changeSensorType()">
+                    <option th:each="sensorType : ${sensorTypes}"
+                            th:id="${sensorType.getId()}"
+                            th:text="${sensorType.getName()}"
+                            th:value="${sensorType.getId()}"
+                    />
+                </select>
             </td>
         </tr>
+        <tr id="rowmodel">
+            <td>
+                <span id="modelspan" style="display: none" th:text="#{conf.select.model}"></span>
+            </td>
+            <td id="modelvalue" class="modelvalue"></td>
+        </tr>
+        <tr id="rowsignal">
+            <td>
+                <span id="signalspan" style="display: none" th:text="#{conf.select.signal}"></span>
+            </td>
+            <td id="signalvalue" class="signalvalue" style="display: none" ></td>
+        </tr>
     </table>
+    <button id="btnNext" type="button" class="btn btn-primary" style="display: none;" th:text="#{btn.next}"
+            onclick="nextBtn()"></button>
+
 </div>
 <!--</form>-->
 

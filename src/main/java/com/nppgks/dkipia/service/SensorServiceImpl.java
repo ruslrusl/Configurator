@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nppgks.dkipia.dao.SensorDAO;
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.start.SModel;
+import com.nppgks.dkipia.entity.start.Signal;
+import com.nppgks.dkipia.entity.start.Type;
 import com.nppgks.dkipia.util.Constant;
 import com.nppgks.dkipia.util.Util;
 import lombok.extern.slf4j.Slf4j;
@@ -276,6 +279,21 @@ public class SensorServiceImpl implements SensorService {
         list.add(priceList.stream().map(Price::getId).collect(Collectors.toList()));
         list.add(priceList.stream().map(Price::getPrice).collect(Collectors.toList()));
         return sensorDAO.savePrice(list);
+    }
+
+    @Override
+    public List<Type> getTypeForStart() {
+        return sensorDAO.getType();
+    }
+
+    @Override
+    public List<SModel> getModelForStart(int idType) {
+        return sensorDAO.getModel(idType);
+    }
+
+    @Override
+    public List<Signal> getSignalForStart(int idType, int idModel) {
+        return sensorDAO.getSignal(idType, idModel);
     }
 
 

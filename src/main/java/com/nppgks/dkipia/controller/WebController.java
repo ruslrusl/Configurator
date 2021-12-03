@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.start.Type;
 import com.nppgks.dkipia.service.DataService;
 import com.nppgks.dkipia.service.SensorService;
 import com.nppgks.dkipia.util.Constant;
@@ -36,8 +37,10 @@ public class WebController {
 
     @RequestMapping("/configurator")
     public String getSensorType(Model model) {
-        List<Sensors> sensors = sensorService.getSensors();
-        model.addAttribute("sensors", sensors);
+//        List<Sensors> sensors = sensorService.getSensors();
+//        model.addAttribute("sensors", sensors);
+        List<Type> sensorTypes = sensorService.getTypeForStart();
+        model.addAttribute("sensorTypes", sensorTypes);
         return "configurator";
     }
 
@@ -62,7 +65,8 @@ public class WebController {
         List<Complete> completeList = sensorService.getComplete(false);
         List<Sensors> sensors = sensorService.getSensors();
         List<Price> priceList = null;
-        if (sensors!=null && sensors.size()>0); {
+        if (sensors != null && sensors.size() > 0) ;
+        {
             priceList = sensorService.getPrice(sensors.get(0).getId());
         }
 
@@ -209,7 +213,7 @@ public class WebController {
         ObjectMapper mapper = new ObjectMapper();
         List<Complete> completeList = mapper.readValue(payload, new TypeReference<List<Complete>>() {
         });
-        if (completeList!=null) {
+        if (completeList != null) {
             if (sensorService.saveComplete(completeList)) {
                 return ResponseEntity.ok("ok");
             } else {
@@ -227,7 +231,7 @@ public class WebController {
         ObjectMapper mapper = new ObjectMapper();
         List<Price> priceList = mapper.readValue(payload, new TypeReference<List<Price>>() {
         });
-        if (priceList!=null) {
+        if (priceList != null) {
             if (sensorService.savePrice(priceList)) {
                 return ResponseEntity.ok("ok");
             } else {

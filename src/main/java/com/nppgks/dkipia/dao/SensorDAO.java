@@ -1,6 +1,9 @@
 package com.nppgks.dkipia.dao;
 
 import com.nppgks.dkipia.entity.*;
+import com.nppgks.dkipia.entity.start.SModel;
+import com.nppgks.dkipia.entity.start.Signal;
+import com.nppgks.dkipia.entity.start.Type;
 
 import java.util.List;
 
@@ -124,4 +127,28 @@ public interface SensorDAO {
      * @return результат
      */
     boolean savePrice(List<List<?>> list);
+
+    /**
+     * Получение типа датчика
+     *
+     * @return список
+     */
+    List<Type> getType();
+
+    /**
+     * Получение моделей датчика по типу
+     *
+     * @param idType идентификатор типа
+     * @return список
+     */
+    List<SModel> getModel(int idType);
+
+    /**
+     * Получение сигналов по типу и модели датчика
+     *
+     * @param idType  идентификатор типа
+     * @param idModel идентификатор модели
+     * @return список
+     */
+    List<Signal> getSignal(int idType, int idModel);
 }
