@@ -269,6 +269,14 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div th:if="${option.getOption().startsWith('Y')}">
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                    th:data-parameter1="${option.getOption()}"
+                                                    th:data-parameter2="${item.getPosition()}"
+                                                    th:onclick="btnYoptclick(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'))"
+                                                    th:text="#{btn.apply}"></button>
+                                        </div>
+
                                     </li>
                                 </ul>
                             </div>

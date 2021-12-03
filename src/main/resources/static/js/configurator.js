@@ -189,6 +189,65 @@ function isNumeric(value) {
     return /^-?\d+$/.test(value);
 }
 
+function btnYoptclick(option, group) {
+    let spanmlfbb = getSpanMlfbB();
+    let spanmlfbс = getSpanMlfbC();
+    let isSubmit = "";
+    let spanmlfbсText = "";
+    let arrY = ["Y01", "Y02", "Y15", "Y16", "Y17", "Y21", "Y22", "Y23", "Y25", "Y26", "Y30", "Y31", "Y32", "Y38", "Y99"];
+    let index = arrY.indexOf(option);
+    if (index !== -1) {
+        if (option == "Y15" || option == "Y16" || option == "Y17" || option == "Y25" || option == "Y32" || option == "Y99") {
+            spanmlfbсText = $("#" + option + "input").val();
+        } else if (option == "Y21" || option == "Y30") {
+            if ($("#" + option + "select option:selected").text()) {
+                spanmlfbсText = $("#" + option + "select option:selected").text();
+            } else if ($("#" + option + "input").val()) {
+                spanmlfbсText = $("#" + option + "input").val();
+            }
+        } else if (option == "Y01") {
+            let t1 = $("#" + option + "number1").val();
+            let t2 = $("#" + option + "number2").val();
+            if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
+                spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
+            }
+        } else if (option == "Y02") {
+            let t1 = $("#" + option + "number1").val();
+            let t2 = $("#" + option + "number2").val();
+            if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
+                spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
+            } else if ($("#" + option + "select option:selected").text()) {
+                spanmlfbсText = $("#" + option + "select option:selected").text();
+            }
+        } else if (option == "Y22" || option == "Y23") {
+            let t1 = $("#" + option + "number1").val();
+            let t2 = $("#" + option + "number2").val();
+
+            if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "input").val()) {
+                spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "input").val();
+            } else if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
+                spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
+            }
+        } else if (option == "Y26" || option == "Y31" || option == "Y38") {
+            if ($("#" + option + "select option:selected")) {
+                spanmlfbсText = $("#" + option + "select option:selected").text();
+            }
+        }
+        if (spanmlfbсText !== null && spanmlfbсText) {
+            spanmlfbсText = option + ": " + spanmlfbсText;
+        } else {
+            isSubmit = "Введите дополнительные данные для опции " + option;
+            $("input[name='radio" + option + "']").prop('checked', false);
+        }
+
+        if (isSubmit == "") {
+            submitForm(getSpanMlfb(), spanmlfbb, spanmlfbс, spanmlfbсText, group, option, 0);
+        } else {
+            loginfo(isSubmit, 4);
+        }
+    }
+}
+
 function jumpNextGroup(option, group, isIncrease, element) {
     let isSubmit = "";
     let groupInt;
@@ -220,48 +279,7 @@ function jumpNextGroup(option, group, isIncrease, element) {
             } else {
                 let index = arrY.indexOf(option);
                 if (index !== -1) {
-                    if (option == "Y15" || option == "Y16" || option == "Y17" || option == "Y25" || option == "Y32" || option == "Y99") {
-                        spanmlfbсText = $("#" + option + "input").val();
-                    } else if (option == "Y21" || option == "Y30") {
-                        if ($("#" + option + "select option:selected").text()) {
-                            spanmlfbсText = $("#" + option + "select option:selected").text();
-                        } else if ($("#" + option + "input").val()) {
-                            spanmlfbсText = $("#" + option + "input").val();
-                        }
-                    } else if (option == "Y01") {
-                        let t1 = $("#" + option + "number1").val();
-                        let t2 = $("#" + option + "number2").val();
-                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
-                            spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
-                        }
-                    } else if (option == "Y02") {
-                        let t1 = $("#" + option + "number1").val();
-                        let t2 = $("#" + option + "number2").val();
-                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
-                            spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
-                        } else if ($("#" + option + "select option:selected").text()) {
-                            spanmlfbсText = $("#" + option + "select option:selected").text();
-                        }
-                    } else if (option == "Y22" || option == "Y23") {
-                        let t1 = $("#" + option + "number1").val();
-                        let t2 = $("#" + option + "number2").val();
-
-                        if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "input").val()) {
-                            spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "input").val();
-                        } else if (t1 !== null && t2 !== null && t1 && t2 && $("#" + option + "select option:selected").text()) {
-                            spanmlfbсText = t1 + " ... " + t2 + " " + $("#" + option + "select option:selected").text();
-                        }
-                    } else if (option == "Y26" || option == "Y31" || option == "Y38") {
-                        if ($("#" + option + "select option:selected")) {
-                            spanmlfbсText = $("#" + option + "select option:selected").text();
-                        }
-                    }
-                    if (spanmlfbсText !== null && spanmlfbсText) {
-                        spanmlfbсText = option + ": " + spanmlfbсText;
-                    } else {
-                        isSubmit = "Введите дополнительные данные для опции " + option;
-                        $("input[name='radio" + option + "']").prop('checked', false);
-                    }
+                    removeGroupOption(group, option)
                 }
             }
         }
