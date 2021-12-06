@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,15 +32,17 @@ public class FileController {
 
     @RequestMapping("/getfile")
     public ResponseEntity<Resource> getFile(@RequestBody String payload) throws IOException {
+        log.info("FileController getfile");
+        log.info("payload = " + payload);
         Jobject jobject = excelService.convertFromJson(payload);
         if (jobject != null) {
-            String fileName = excelService.generateFile(jobject.getSensors(), jobject.getType() != null ? jobject.getType().get(0) : 1);
+            String fileName = excelService.generateFile(jobject.getSensors(), jobject.getType() != null ? jobject.getType().get(0) : 1, jobject.getNumber());
             log.info("payload = " + payload);
             log.info("fileName = " + fileName);
             if (fileName != null) {
                 File file = new File(fileName);
                 HttpHeaders header = new HttpHeaders();
-                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
                 header.add("Cache-Control", "no-cache, no-store, must-revalidate");
                 header.add("Pragma", "no-cache");
                 header.add("Expires", "0");

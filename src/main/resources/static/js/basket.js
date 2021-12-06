@@ -36,6 +36,10 @@ $(document).ready(function () {
             calcPrice("box", i);
         }
     }
+    $("#basketnumb").inputFilter(function (value) {
+        return /^\d*$/.test(value);
+    });
+
 });
 
 function calcPrice(elbeginname, rownumber) {
@@ -213,13 +217,20 @@ function getObj() {
 }
 
 function basketExport(type) {
+    let bsktnumb = $("#basketnumb").val();
+    if (bsktnumb === "") {
+        loginfo("Введите номер корзины", 3);
+        return;
+    }
+
     //json объект в виде массива
     let arr = getObj();
     let typearr = [];
     typearr.push(type);
     let jsonObj = {
         "type": typearr,
-        "sensors": arr
+        "sensors": arr,
+        "number": $("#basketnumb").val()
     }
     var json = JSON.stringify(jsonObj);
     var xhttp = new XMLHttpRequest();
@@ -235,7 +246,10 @@ function basketExport(type) {
                 if (disposition && disposition.indexOf('attachment') !== -1) {
                     var filenameRegex = /filename[^;=]*=((['"]).*?2|[^;]*)/;
                     var matches = filenameRegex.exec(disposition);
-                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                        filename = decodeURI(filename);
+                    }
                 } else {
                     filename = 'mlfb.xlsx'
                 }
@@ -274,6 +288,15 @@ function removeSensor(id) {
     xhttp.send(json);
 }
 
+function openSendEmail() {
+    let bsktnumb = $("#basketnumb").val();
+    if (bsktnumb === "") {
+        loginfo("Введите номер корзины", 3);
+        return;
+    }
+    $("#openSendEmail").modal('show')
+}
+
 function sendEmail() {
     //json объект в виде массива
     let sendto = $("#sendto").val();
@@ -293,7 +316,9 @@ function sendEmail() {
                 let jsonObj = {
                     "type": arrType,
                     "sensors": arr,
-                    "sendto": sendto
+                    "number": $("#basketnumb").val(),
+                    "sendto": sendto,
+                    "sendmsg":$("#emailmsg").val(),
                 }
                 var json = JSON.stringify(jsonObj);
                 var xhttp = new XMLHttpRequest();

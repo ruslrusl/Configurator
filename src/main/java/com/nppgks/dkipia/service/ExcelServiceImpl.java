@@ -37,19 +37,19 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public String generateFile(List<Jsensor> jsensorList, int type) {
+    public String generateFile(List<Jsensor> jsensorList, int type, int number) {
         if (jsensorList != null) {
             String fileName = null;
             if (type == Constant.FILE.EXPORT_TYPE_MLFB) {
-                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB);
+                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB, number);
             } else if (type == Constant.FILE.EXPORT_TYPE_MLFB_DESC) {
-                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_DESC);
+                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_DESC, number);
             } else if (type == Constant.FILE.EXPORT_TYPE_TKP) {
-                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_TKP);
+                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_TKP, number);
             } else if (type == Constant.FILE.EXPORT_TYPE_MLFB_INDUSTRY) {
-                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_INDUSTRY);
+                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_MLFB_INDUSTRY, number);
             } else if (type == Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
-                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_SPECIFICATION);
+                fileName = Util.generateFileNameWithDirectory(Constant.FILE.EXPORT_FILE_SPECIFICATION, number);
             }
 
             if (fileName != null) {
@@ -141,7 +141,7 @@ public class ExcelServiceImpl implements ExcelService {
                 cell1.setCellValue(jsensor.getMlfbrus());
                 colNum++;
                 Cell cell2 = row.getCell(colNum++);
-                cell2.setCellValue(jsensor.getMlfbrus().substring(0, 5));
+                cell2.setCellValue(jsensor.getMlfbrus().substring(0, 6));
                 Cell cell3 = row.getCell(colNum++);
                 cell3.setCellValue("НПП \"ГКС\"");
                 colNum++;

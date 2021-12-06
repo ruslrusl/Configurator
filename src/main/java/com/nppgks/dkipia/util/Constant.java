@@ -56,11 +56,11 @@ public interface Constant {
         String FILENAME_TKP = "шаблон ТКП.xlsx";
 
         String EXTENSION = ".xlsx";
-        String EXPORT_FILE_MLFB = "code";
-        String EXPORT_FILE_MLFB_DESC = "code_option";
-        String EXPORT_FILE_TKP = "tkp";
-        String EXPORT_FILE_MLFB_INDUSTRY = "mlfb";
-        String EXPORT_FILE_SPECIFICATION = "specification";
+        String EXPORT_FILE_MLFB = "Заказные_коды_без_расшифровки";
+        String EXPORT_FILE_MLFB_DESC = "Заказные_коды_c_расшифровкой";
+        String EXPORT_FILE_TKP = "ТКП";
+        String EXPORT_FILE_MLFB_INDUSTRY = "Заказные_коды_для_Industry_mall";
+        String EXPORT_FILE_SPECIFICATION = "Закупочная_спецификация";
 
         int EXPORT_TYPE_MLFB = 1;
         int EXPORT_TYPE_MLFB_DESC = 2;
@@ -71,5 +71,6 @@ public interface Constant {
 
     interface MAIL {
         String FROM = "configurator@nppgks.com";
+        String DEFAULT_MESSAGE = "Данное письмо сформировано автоматически и не требует ответа";
     }
 }

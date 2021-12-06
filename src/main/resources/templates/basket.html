@@ -39,8 +39,15 @@
     </div>
     <!--    <button type="button" class="btn btn-primary" th:text="#{btn.basket.setting}"></button>-->
     <!--    <button type="button" class="btn btn-primary" th:text="#{btn.basket.send}"></button>-->
-    <button type="button" class="btn btn-primary" data-toggle="modal"
-            data-target="#openSendEmail" th:text="#{btn.basket.send}"></button>
+<!--    <button type="button" class="btn btn-primary" data-toggle="modal"-->
+<!--            data-target="#openSendEmail" th:text="#{btn.basket.send}"></button>-->
+
+    <button type="button" class="btn btn-primary" onclick="openSendEmail()" th:text="#{btn.basket.send}"></button>
+    <div class="mt-1">
+        <label for="basketnumb" th:text="#{btn.basket.number}"></label>
+        <input type="input" id="basketnumb" name="basketnumb">
+    </div>
+
 
     <table class="table table-hover table-bordered">
         <thead>
@@ -110,8 +117,25 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <span th:text="#{basket.sendto}"></span>
-                    <input type="email" id="sendto" style="width: 80%;"/>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 20%">
+                                <span th:text="#{basket.sendto}" ></span>
+                            </td>
+                            <td style="width: 70%">
+                                <input type="email" id="sendto" style="width: 90%"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span th:text="#{basket.message}"></span>
+                            </td>
+                            <td>
+                                <textarea id="emailmsg" style="width: 90%; resize: none;"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+
                     <br/>
                     <fieldset>
                         <span th:text="#{basket.sendfile}"></span>

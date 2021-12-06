@@ -17,4 +17,12 @@ public class Jobject {
     @Getter
     @Setter
     private String sendto;
+
+    @Getter
+    @Setter
+    private String sendmsg;
+
+    @Getter
+    @Setter
+    private int number;
 }

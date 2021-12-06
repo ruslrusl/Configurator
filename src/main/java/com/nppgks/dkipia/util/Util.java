@@ -172,10 +172,11 @@ public class Util {
         sb.append("<tr><td style=\"" + stylePaddingLeft + styleColor + "\" class=\"cursorpointer\"><span onclick=\"jumpNextGroup(0,'" + Util.getRuleValue(rule, true) + "', 0, this)\"> =>" + returnRule + "</span></td></tr>");
     }
 
-    public static String generateFileNameWithDirectory(String name) {
+    public static String generateFileNameWithDirectory(String name, int number) {
         DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String dir = Util.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
-        String result = dir+name+"_"+timeStampPattern.format(java.time.LocalDateTime.now())+Constant.FILE.EXTENSION;
+//        String result = dir+number+"_"+name+"_"+timeStampPattern.format(java.time.LocalDateTime.now())+Constant.FILE.EXTENSION;
+        String result = dir+number+"_"+name+Constant.FILE.EXTENSION;
         return result;
     }
 

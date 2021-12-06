@@ -20,7 +20,8 @@ public interface ExcelService {
      *
      * @param jsensorList список оборудований
      * @param type        тип формирования файла
+     * @param number      номер корзины
      * @return название файла
      */
-    String generateFile(List<Jsensor> jsensorList, int type);
+    String generateFile(List<Jsensor> jsensorList, int type, int number);
 }
