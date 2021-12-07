@@ -24,4 +24,12 @@ public interface ExcelService {
      * @return название файла
      */
     String generateFile(List<Jsensor> jsensorList, int type, int number);
+
+    /**
+     * Формирование объекта из excel Файла
+     *
+     * @param fileDir excel Файл
+     * @return объект
+     */
+    Jobject generateObjectFromFile(String fileDir);
 }

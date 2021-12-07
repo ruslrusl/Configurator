@@ -16,6 +16,13 @@
 }(jQuery));
 
 $(document).ready(function () {
+    setFilter();
+    $("#basketnumb").inputFilter(function (value) {
+        return /^\d*$/.test(value);
+    });
+});
+
+function setFilter() {
     for (let i = 1; i <= 100; i++) {
         let el = $("#boxcount" + i);
         if (el.length == 0) {
@@ -36,11 +43,7 @@ $(document).ready(function () {
             calcPrice("box", i);
         }
     }
-    $("#basketnumb").inputFilter(function (value) {
-        return /^\d*$/.test(value);
-    });
-
-});
+}
 
 function calcPrice(elbeginname, rownumber) {
     let count = $("#" + elbeginname + "count" + rownumber).val();
@@ -84,6 +87,14 @@ function addComplete(rownumber) {
                 '<td style="display: none" id="completeunit' + rownumber + i + '"></td>' +
                 '</tr>');
             $(".selectpicker").selectpicker("refresh");
+
+            $("#completecount" + rownumber + i).inputFilter(function (value) {
+                return /^\d*$/.test(value);
+            });
+            $("#completecoef" + rownumber + i).inputFilter(function (value) {
+                return /^-?\d*[.]?\d{0,2}$/.test(value);
+            });
+
             break;
         }
     }
@@ -232,8 +243,8 @@ function basketExport(type) {
         "sensors": arr,
         "number": $("#basketnumb").val()
     }
-    var json = JSON.stringify(jsonObj);
-    var xhttp = new XMLHttpRequest();
+    let json = JSON.stringify(jsonObj);
+    let xhttp = new XMLHttpRequest();
 
     $("#loading").show();
     xhttp.onreadystatechange = function () {
@@ -308,6 +319,9 @@ function sendEmail() {
                     arrType.push(i);
                 }
             }
+            if ($("#checkboxExport10").is(':checked')) {
+                arrType.push(10);
+            }
             if (arrType.length == 0) {
                 loginfo("Не выбраны файлы для отправки", 4);
             } else {
@@ -318,7 +332,7 @@ function sendEmail() {
                     "sensors": arr,
                     "number": $("#basketnumb").val(),
                     "sendto": sendto,
-                    "sendmsg":$("#emailmsg").val(),
+                    "sendmsg": $("#emailmsg").val(),
                 }
                 var json = JSON.stringify(jsonObj);
                 var xhttp = new XMLHttpRequest();
@@ -350,4 +364,88 @@ function sendEmail() {
 function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
+}
+
+function downloadFile() {
+    $("#openDownloadFile").modal('hide');
+    $("#loading").show();
+    let formData = new FormData(document.getElementById("downloadForm"));
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/downloadtobasket');
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                $("#loading").hide();
+                fillFromObject(this.response);
+            } else {
+                $("#loading").hide();
+                loginfo("Ошибка при загрузке файла. Код ошибки: " + this.status, 4);
+            }
+        }
+    };
+    xhr.send(formData);
+}
+
+function fillFromObject(json) {
+    let arr = JSON.parse(json);
+    let number = arr["number"];
+    if (number) {
+        $("#basketnumb").val(number)
+    }
+    let sensors = arr["sensors"];
+    if (sensors) {
+        $("#baskettable > tbody").empty();
+        for (let i = 0; i < sensors.length; i++) {
+            let j = i + 1;
+            let obj = sensors[i];
+            $("#baskettable > tbody").append(
+                "<tr id='rowsensor" + j + "'>" +
+                '<td><button class="btn btn-default" onclick="removeSensor('+j+')"><img src="/css/images/bi-trash.svg"></button></td>' +
+                "<th scope='row' id='boxnumber"+j+"'>"+j+"</th>" +
+                "<td id='boxmlfbrus"+j+"'>"+obj["mlfbrus"]+"</td>" +
+                "<td style='display: none;' id='boxmlfb"+j+"'>"+obj["mlfb"]+"</td>"+
+                "<td id='boxdescr"+j+"'>"+obj["descr"]+"</td>"+
+                "<td id='boxprice"+j+"'>"+obj["price"]+"</td>" +
+                "<td><input id='boxcount"+j+"' class='basketinput' value='"+obj["count"]+"'></td>" +
+                "<td id='boxpricecount"+j+"'></td>"+
+                "<td><input id='boxcoef"+j+"' class='basketinput' value='"+obj["coef"]+"'></td>" +
+                "<td id='boxpricecoef"+j+"'></td>"+
+                "<td id='boxpricetotal"+j+"'></td>"+
+                "</tr>"
+            );
+            $("#baskettable > tbody").append("<tr id='rowсompletename" + j + "'>" +
+                "<td></td>"+
+                '<td><button type="button" class="btn btn-dark btn-sm" onclick="addComplete('+j+')">Добавить</button></td>'+
+                "<td>В комплекте:</td>"+
+                "</tr>"
+            );
+            let completes = obj["complete"];
+            for (let k = 0; k < completes.length; k++) {
+                let complete = completes[k];
+                console.log(complete);
+                let l = k + 1;
+                addComplete(j);
+                let compName=complete["name"];
+                $("#completeSelect option").each(function()
+                {
+                    // Add $(this).val() to your list
+                    if ($(this).text().localeCompare(compName)==0) {
+                        let sval = String($(this).val());
+                        console.log("sval = "+sval);
+                        $("#selectComplete"+j+l).selectpicker('val', sval);
+                        changeComplete(j+""+l);
+                        $("#completecoef" +j+l).val(complete["coef"]);
+                        $("#completecount"+j+l).val(complete["count"]);
+                    }
+                });
+            }
+            $("#baskettable > tbody").append("<tr id='rowtotal" + j + "'>" +
+                "<td id='boxtotalname"+j+"' colspan='8' class='text-right font-weight-bold'>Итоговая стоимость комплекта</td>"+
+                "<td id='boxtotalpricecoef"+j+"' class='font-weight-bold'></td>"+
+                "<td id='boxtotalpricetotal"+j+"' class='font-weight-bold'></td>"+
+                "</tr>"
+            );
+        }
+        setFilter();
+    }
 }

@@ -25,12 +25,10 @@ public class Util {
         try {
             ISTEST1 = false;
             Enumeration e = NetworkInterface.getNetworkInterfaces();
-            while(e.hasMoreElements())
-            {
+            while (e.hasMoreElements()) {
                 NetworkInterface n = (NetworkInterface) e.nextElement();
                 Enumeration ee = n.getInetAddresses();
-                while (ee.hasMoreElements())
-                {
+                while (ee.hasMoreElements()) {
                     InetAddress i = (InetAddress) ee.nextElement();
                     if (i.getHostAddress().equalsIgnoreCase("192.168.61.138")) {
                         ISTEST1 = true;
@@ -42,7 +40,7 @@ public class Util {
             ISTEST1 = false;
         }
         ISTEST = ISTEST1;
-        System.out.println("Is test machine = "+ISTEST1);
+        System.out.println("Is test machine = " + ISTEST1);
     }
 
     public static List<String> separateString(String str, int delimeter) {
@@ -65,7 +63,7 @@ public class Util {
                         .collect(Collectors.toList());
             } else if (delimeter == 4) {
                 String[] split = str.split(Constant.MLFB.OPTION_DELIMETER);
-                for (String s: split) {
+                for (String s : split) {
                     String[] split2 = s.split(Constant.MLFB.DELIMETER_SPACE);
                     result.addAll(Arrays.asList(split2));
                 }
@@ -172,21 +170,25 @@ public class Util {
         sb.append("<tr><td style=\"" + stylePaddingLeft + styleColor + "\" class=\"cursorpointer\"><span onclick=\"jumpNextGroup(0,'" + Util.getRuleValue(rule, true) + "', 0, this)\"> =>" + returnRule + "</span></td></tr>");
     }
 
+    public static String getDir() {
+        return Util.ISTEST ? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
+    }
+
     public static String generateFileNameWithDirectory(String name, int number) {
         DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String dir = Util.ISTEST? Constant.FILE.TEST_DIRECTORY : Constant.FILE.DIRECTORY;
+        String dir = Util.getDir();
 //        String result = dir+number+"_"+name+"_"+timeStampPattern.format(java.time.LocalDateTime.now())+Constant.FILE.EXTENSION;
-        String result = dir+number+"_"+name+Constant.FILE.EXTENSION;
+        String result = dir + number + "_" + name + Constant.FILE.EXTENSION;
         return result;
     }
 
     public static String getFileNameFromTemplate(int type) {
-        String dir = Util.ISTEST? Constant.FILE.TEST_DIRECTORY_TEMPLATE : Constant.FILE.DIRECTORY_TEMPLATE;
+        String dir = Util.getDir();
         String result = "";
-        if (type==Constant.FILE.EXPORT_TYPE_TKP) {
-            result = dir+Constant.FILE.FILENAME_TKP;
-        } else if (type==Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
-            result = dir+Constant.FILE.FILENAME_SPECIFICATION;
+        if (type == Constant.FILE.EXPORT_TYPE_TKP) {
+            result = dir + Constant.FILE.FILENAME_TKP;
+        } else if (type == Constant.FILE.EXPORT_TYPE_SPECIFICATION) {
+            result = dir + Constant.FILE.FILENAME_SPECIFICATION;
         }
         return result;
     }
@@ -195,7 +197,7 @@ public class Util {
         if (json != null) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                String str =  mapper.readValue(json, String.class);
+                String str = mapper.readValue(json, String.class);
                 str = str.trim();
                 return str;
             } catch (JsonProcessingException e) {

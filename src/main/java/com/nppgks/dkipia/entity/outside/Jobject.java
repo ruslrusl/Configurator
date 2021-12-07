@@ -1,7 +1,9 @@
 package com.nppgks.dkipia.entity.outside;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.util.List;
 
@@ -25,4 +27,10 @@ public class Jobject {
     @Getter
     @Setter
     private int number;
+
+    @SneakyThrows
+    public String toString() {
+        ObjectMapper om = new ObjectMapper();
+        return om.writeValueAsString(this);
+    }
 }

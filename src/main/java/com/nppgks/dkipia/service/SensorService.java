@@ -148,9 +148,9 @@ public interface SensorService {
      * Получение спика описания по конфигурации
      *
      * @param mlfb конфигурация полностью
-     * @return список
+     * @return описание
      */
-    List<SensorFull> getSensorFullList(String mlfb);
+    SensorFull getSensorFullList(String mlfb);
 
     /**
      * Получение спика описания по списку конфигурации

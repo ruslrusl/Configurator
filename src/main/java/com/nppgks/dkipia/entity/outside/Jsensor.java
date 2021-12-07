@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -66,6 +67,13 @@ public class Jsensor {
     @Getter
     @Setter
     private List<Jcomplete> complete;
+
+    public void setOneComplete(Jcomplete jcomplete) {
+        if (complete==null) {
+            complete = new ArrayList<>();
+        }
+        complete.add(jcomplete);
+    }
 
     @SneakyThrows
     public String toString() {

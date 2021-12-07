@@ -35,6 +35,7 @@
             <a class="dropdown-item" onclick="basketExport(3)" href="#" th:text="#{btn.basket.export.tkp}"/>
             <a class="dropdown-item" onclick="basketExport(4)" href="#" th:text="#{btn.basket.export.mlfbindustry}"/>
             <a class="dropdown-item" onclick="basketExport(5)" href="#" th:text="#{btn.basket.export.specification}"/>
+            <a class="dropdown-item" onclick="basketExport(10)" href="#" th:text="#{btn.basket.export.download}"/>
         </div>
     </div>
     <!--    <button type="button" class="btn btn-primary" th:text="#{btn.basket.setting}"></button>-->
@@ -43,13 +44,15 @@
 <!--            data-target="#openSendEmail" th:text="#{btn.basket.send}"></button>-->
 
     <button type="button" class="btn btn-primary" onclick="openSendEmail()" th:text="#{btn.basket.send}"></button>
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target="#openDownloadFile" th:text="#{btn.basket.download.button}"></button>
     <div class="mt-1">
         <label for="basketnumb" th:text="#{btn.basket.number}"></label>
         <input type="input" id="basketnumb" name="basketnumb">
     </div>
 
 
-    <table class="table table-hover table-bordered">
+    <table id="baskettable" class="table table-hover table-bordered">
         <thead>
         <tr>
             <th scope="col"></th>
@@ -159,6 +162,10 @@
                             <input type="checkbox" id="checkboxExport5" name="checkboxExport5">
                             <label for="checkboxExport5" th:text="#{btn.basket.export.specification}"></label>
                         </div>
+                        <div>
+                            <input type="checkbox" id="checkboxExport10" name="checkboxExport10">
+                            <label for="checkboxExport10" th:text="#{btn.basket.export.download}"></label>
+                        </div>
                     </fieldset>
 
                 </div>
@@ -166,9 +173,39 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                         th:text="#{btn.close}"></button>
-                <button type="button" class="btn btn-primary" th:text="#{btn.basket.send}"
+                <button type="button" class="btn btn-primary" th:text="#{btn.basket.send.action}"
                         onclick="sendEmail()"></button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal-->
+<div class="modal fade" id="openDownloadFile" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="openDownloadFileLongTitle" th:text="#{btn.basket.download.button}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="downloadForm">
+                <div class="modal-body">
+                    <div>
+                            <label for="downloadfile" th:text="#{btn.basket.download.text}"></label>
+                            <input id="downloadfile" name="downloadfile" type="file"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            th:text="#{btn.close}"></button>
+                    <button type="button" class="btn btn-primary" th:text="#{btn.basket.download.action}"
+                            onclick="downloadFile()"></button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

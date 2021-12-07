@@ -61,12 +61,14 @@ public interface Constant {
         String EXPORT_FILE_TKP = "ТКП";
         String EXPORT_FILE_MLFB_INDUSTRY = "Заказные_коды_для_Industry_mall";
         String EXPORT_FILE_SPECIFICATION = "Закупочная_спецификация";
+        String EXPORT_FILE_FOR_DOWNLOAD = "Файл_для_загрузки";
 
         int EXPORT_TYPE_MLFB = 1;
         int EXPORT_TYPE_MLFB_DESC = 2;
         int EXPORT_TYPE_TKP = 3;
         int EXPORT_TYPE_MLFB_INDUSTRY = 4;
         int EXPORT_TYPE_SPECIFICATION = 5;
+        int EXPORT_TYPE_FOR_DOWNLOAD = 10;
     }
 
     interface MAIL {
