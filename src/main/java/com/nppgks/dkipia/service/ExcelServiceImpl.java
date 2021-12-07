@@ -102,7 +102,7 @@ public class ExcelServiceImpl implements ExcelService {
             XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(fileDir));
             XSSFSheet sheet = wb.getSheetAt(0);
             int lastRowNum = sheet.getLastRowNum();
-            if (lastRowNum>1) {
+            if (lastRowNum>0) {
                 List<Jsensor> jsensorList = new ArrayList<>();
                 Jsensor jsensor = null;
                 for (int i=1; i<=lastRowNum; i++) {
