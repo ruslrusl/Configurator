@@ -255,12 +255,25 @@ function jumpNextGroup(option, group, isIncrease, element) {
     let spanmlfbс = getSpanMlfbC();
     let spanmlfbсText = "";
     let arrY = ["Y01", "Y02", "Y15", "Y16", "Y17", "Y21", "Y22", "Y23", "Y25", "Y26", "Y30", "Y31", "Y32", "Y38", "Y99"];
+
+    console.log("jumpNextGroup");
+    console.log("spanmlfbb = " + spanmlfbb);
     console.log("option = " + option);
     console.log("group = " + group);
     console.log("isIncrease = " + isIncrease);
     if (isNumeric(group)) {
         groupInt = parseInt(group, 0);
+
         if (isIncrease == 1) {
+
+            let spanmlfb = getSpanMlfb();
+            let arrspanmlfb = spanmlfb.split("");
+            if (arrspanmlfb[groupInt-1]==option) {
+                //уже был выбран такой элемент, значит удаляем
+                removeGroupOption(group, option);
+                return;
+            }
+
             $("#lm" + group).text(option);
             groupInt = groupInt + 1;
         }
@@ -270,6 +283,17 @@ function jumpNextGroup(option, group, isIncrease, element) {
     } else {//опции
 
         if (option != 0) {
+
+            if (spanmlfbb != "") {
+                let arrspanmlfbb = spanmlfbb.split("+");
+                var index = arrspanmlfbb.indexOf(option);
+                if (index !== -1) {
+                    //уже был выбран такой элемент, значит удаляем
+                    removeGroupOption(group, option);
+                    return;
+                }
+            }
+
             console.log("*******************");
             console.log(element);
             console.log(element.type);
