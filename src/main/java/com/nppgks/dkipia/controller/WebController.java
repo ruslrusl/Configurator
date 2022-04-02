@@ -79,9 +79,12 @@ public class WebController {
 
     @PostMapping("/addtobasket")
     public ResponseEntity<String> addtobasket(@RequestBody String payload, HttpServletRequest request) {
-        String mlfb = Util.convertStringFromJson(payload);
-        log.info("mlfb = " + mlfb);
-        dataService.insertData(request.getSession().getId(), mlfb);
+        String inText = Util.convertStringFromJson(payload);
+//        String strarr[] = inText.split("count=");
+//        String mlfb = strarr[0];
+//        String count = strarr[1];
+        log.info("mlfb = " + inText);
+        dataService.insertData(request.getSession().getId(), inText);
         return ResponseEntity.ok("ok");
     }
 
@@ -109,6 +112,7 @@ public class WebController {
         log.info(sensor.toString());
         log.info(sensorsLabels.toString());
         model.addAttribute("sensor", sensor);
+        model.addAttribute("count", 1);
         model.addAttribute("sensorsLabels", sensorsLabels);
         model.addAttribute("mlfb", Util.separateString(sensor.getMlfbstandart(), 0));
         model.addAttribute("mlfbB", null);
@@ -119,7 +123,7 @@ public class WebController {
     }
 
     @PostMapping("/configurator/{id}")
-    public String getConfigurator(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, Model model) {
+    public String getConfigurator(@PathVariable int id, @RequestParam String mlfb, @RequestParam String mlfbB, @RequestParam String mlfbC, @RequestParam String group, @RequestParam String option, @RequestParam String mlfbCText, @RequestParam int isformat, @RequestParam int count, Model model) {
         log.info("PostMapping getConfigurator");
         log.info("mlfb = " + mlfb);
         log.info("mlfbB = " + mlfbB);
@@ -128,6 +132,7 @@ public class WebController {
         log.info("option = " + option);
         log.info("group = " + group);
         log.info("isformat = " + isformat);
+        log.info("count = " + count);
 
         Sensors sensor = sensorService.getSensorById(id);
         //формируем необходимые label
@@ -167,6 +172,7 @@ public class WebController {
         String russianMlfb = sensorService.getRussianMlfb(sensor.getMlfb());
 
         model.addAttribute("sensor", sensor);
+        model.addAttribute("count", count);
         model.addAttribute("sensorsLabels", sensorsLabels);
         model.addAttribute("mlfb", Util.separateString(sensor.getMlfb(), 0));
         model.addAttribute("mlfbRus", Util.separateString(russianMlfb, 0));

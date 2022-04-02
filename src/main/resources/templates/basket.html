@@ -82,7 +82,7 @@
                 <td th:id="'boxdescr'+${sensorStat.index+1}"
                     th:utext="${sensor.getRusmlfb()} + '<br/>' + ${sensor.getDescr()}"></td>
                 <td th:id="'boxprice'+${sensorStat.index+1}" th:text="${sensor.getPrice()}"></td>
-                <td><input th:id="'boxcount'+${sensorStat.index+1}" value="1" class="basketinput"/></td>
+                <td><input th:id="'boxcount'+${sensorStat.index+1}" th:value="${sensor.getCount()}" class="basketinput"/></td>
                 <td th:id="'boxpricecount'+${sensorStat.index+1}"></td>
                 <td><input th:id="'boxcoef'+${sensorStat.index+1}" value="1.2" class="basketinput"/></td>
                 <td th:id="'boxpricecoef'+${sensorStat.index+1}"></td>

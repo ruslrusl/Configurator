@@ -27,6 +27,10 @@ public class SensorFull {
     @Setter
     private String price;
 
+    @Getter
+    @Setter
+    private int count;
+
     @SneakyThrows
     public String toString() {
         ObjectMapper om = new ObjectMapper();

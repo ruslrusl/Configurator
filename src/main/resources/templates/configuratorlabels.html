@@ -50,6 +50,12 @@
             <div id="MLFBdiv">
                 <form id="mlfbForm" action="" method="post">
                     <table class="table table-striped">
+                        <tr>
+                            <td>
+                                <span id="countval" th:text="Количество"></span>
+                                <input type="number" id="countnumb" name="countnumb" min="1" th:value=" ${count}">
+                            </td>
+                        </tr>
                         <tr th:each="item: ${sensorsLabels}">
                             <td th:if="${item.getTab()==1}">
                         <span th:switch="${item.getSelectType()}" class="float-left mr-sm-2">
@@ -360,6 +366,14 @@
                 <span th:if="${iState.index + 1} != ${iState.size}"> </span>
             </span>
         </div>
+
+        <button>
+            <img style="display:inline-block; width: 20px;  height: 20px;" class="cursorpointer"
+                 th:src="@{/css/images/icons8-copy-50.png}"
+                 th:onclick="copyToClipboard()"
+            ></img>
+        </button>
+
         <br/>
         <button type="button" class="btn btn-outline-dark" data-toggle="modal"
                 data-target="#addMlfbManually" th:text="#{configurator.manually}"></button>

@@ -190,6 +190,7 @@ function isNumeric(value) {
 }
 
 function btnYoptclick(option, group) {
+    console.log("btnYoptclick");
     let spanmlfbb = getSpanMlfbB();
     let spanmlfbс = getSpanMlfbC();
     let isSubmit = "";
@@ -318,6 +319,7 @@ function jumpNextGroup(option, group, isIncrease, element) {
 
 function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
 
+    var countnumb = $("#countnumb").val();
     console.log("mlfb = [" + mlfb + "], mlfbb= [" + mlfbb + "], mlfbс= [" + mlfbс + "], mlfbсText= [" + mlfbсText + "], group= [" + group + "], option= [" + option + "] ")
 
     $("#mlfbForm").append('<input type="hidden" name="mlfb" value= "' + mlfb + '"/> ');
@@ -327,15 +329,18 @@ function submitForm(mlfb, mlfbb, mlfbс, mlfbсText, group, option, isformat) {
     $("#mlfbForm").append('<input type="hidden" name="group" value= "' + group + '"/> ');
     $("#mlfbForm").append('<input type="hidden" name="option" value= "' + option + '"/> ');
     $("#mlfbForm").append('<input type="hidden" name="isformat" value= "' + isformat + '"/> ');
+    $("#mlfbForm").append('<input type="hidden" name="count" value= "' + countnumb + '"/> ');
     $("#mlfbForm").attr('action', getHrefForJump(group));
     $("#mlfbForm").submit();
 }
 
 function addToBasket() {
     let mlfb = getFullMlfb(1);
-
+    let mlfbInfo = mlfb;
+    mlfb = mlfb + "count="+$("#countnumb").val();
     let jsonObj = {
-        "mlfb": mlfb
+        "mlfb": mlfb,
+        "count": $("#countnumb").val()
     };
     let json = JSON.stringify(mlfb);
 
@@ -343,11 +348,37 @@ function addToBasket() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            loginfo("Заказ " + mlfb + " добавлен в корзину", 1);
+            loginfo("Заказ " + mlfbInfo + " добавлен в корзину", 1);
         }
     };
     xhttp.open("POST", "/addtobasket", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(json);
+}
 
+function copyToClipboard() {
+    var text = getFullMlfb(1);
+    if (window.clipboardData && window.clipboardData.setData) {
+        // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+        return window.clipboardData.setData("Text", text);
+
+    }
+    else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            loginfo("Скопировано!", 2);
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        }
+        catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return prompt("Скопируйте при помощи команд: Ctrl+C, Enter", text);
+        }
+        finally {
+            document.body.removeChild(textarea);
+        }
+    }
 }
