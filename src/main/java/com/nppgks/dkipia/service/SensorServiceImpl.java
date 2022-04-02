@@ -132,17 +132,35 @@ public class SensorServiceImpl implements SensorService {
 
                 if (mlfbB != null && !mlfbB.isEmpty()) {
                     List<String> listMlfbb = Util.separateString(mlfbB, 1);
+
+                    //у элементов с radiobox в группе должны быть только по одному
                     sensorsLabels.stream()
                             .filter(o -> o.getPosition().equals(group))
                             .filter(o -> o.getSensorsOptionNames() != null)
                             .filter(o -> o.getEltype() == Constant.SENSOR.ELEMENT_RADIO)
-                            .forEach(
-                                    o -> o.getSensorsOptionNames().forEach(opt ->
+                            .forEach(o ->
+                                    o.getSensorsOptionNames().forEach(opt ->
                                             {
                                                 listMlfbb.remove(opt.getOption());
                                                 listMlfbс.removeIf(c -> c.startsWith(opt.getOption()));
                                             }
                                     )
+                            );
+
+                    //у элементов с чекбокс в группе могут быть несколько, поэтому удаляем только конкретный элемент
+                    sensorsLabels.stream()
+                            .filter(o -> o.getPosition().equals(group))
+                            .filter(o -> o.getSensorsOptionNames() != null)
+                            .filter(o -> o.getEltype() == Constant.SENSOR.ELEMENT_CHECKBOX)
+                            .forEach(o ->
+                                    o.getSensorsOptionNames().stream()
+                                            .filter(opt -> opt.getOption().equals(option))
+                                            .forEach(opt ->
+                                                    {
+                                                        listMlfbb.remove(opt.getOption());
+                                                        listMlfbс.removeIf(c -> c.startsWith(opt.getOption()));
+                                                    }
+                                            )
                             );
                     listMlfbb.add(option);
                     result[0] = Util.concatenateString(listMlfbb, 1);
@@ -211,8 +229,19 @@ public class SensorServiceImpl implements SensorService {
     public List<SensorFull> getSensorFullList(List<String> mlfbList) {
         List<SensorFull> list = new ArrayList<>();
         if (mlfbList != null) {
-            for (String mlfb : mlfbList) {
+            for (String mlfbIn : mlfbList) {
+                String strarr[] = mlfbIn.split("count=");
+                String mlfb = strarr[0];
+                String count = strarr[1];
                 SensorFull sensorFull = sensorDAO.getSensorFull(mlfb);
+                if (count != null && !count.isEmpty()) {
+                    int cnt = 1;
+                    try {
+                        cnt = Integer.parseInt(count);
+                    } catch (NumberFormatException nfe) {
+                    }
+                    sensorFull.setCount(cnt);
+                }
                 list.add(sensorFull);
             }
         }
